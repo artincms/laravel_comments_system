@@ -43,7 +43,12 @@
     </div>
 </template>
 <script>
+    var token = document.head.querySelector('meta[name="csrf-token"]');
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
     export default {
+        props: {
+            model: Object
+        },
         data() {
             return {
                 data: ''
@@ -51,9 +56,43 @@
         },
         mounted() {
             axios
-                .post("/LCS/GetContent", {model: 'App/Article', id: '1','pid_key':'parent_id'})
-                .then(response => (this.data = response))
+                .post("/LCS/Getdata", {model: 'App\\Article', id: '1',pid_key:'parent_id'})
+                .then((response)=>{
+                console.log(response.data);
+                this.data = response.data ;
+            }).catch((error)=>{
+                console.log(error.response.data)
+            });
+        },
+        computed: {
+            isFolder: function () {
+                return this.model.children &&
+                    this.model.children.length
+            }
+        },
+        methods: {
+            toggle: function () {
+                if (this.isFolder) {
+                    this.open = !this.open
+                }
+            },
+            showForm :function () {
+                if (this.showForm) {
+                    this.openForm = !this.openForm
+                }
+            },
+            changeType: function () {
+                if (!this.isFolder) {
+                    Vue.set(this.model, 'children', [])
+                    this.addChild()
+                    this.open = true
+                }
+            },
+            addChild: function () {
+                this.model.children.push({
+                    name: 'new stuff'
+                })
+            }
         }
     }
-
 </script>
