@@ -21,7 +21,7 @@ function LCS_BuildTree($flat_array, $pidKey, $openNodes = true, $selectedNode = 
             $id = $sibling[$idKey];
             if (isset($grouped[$id]))
             {
-                $sibling[$children_key] = $fnBuilder($grouped[$id]);
+                $sibling{$children_key} = $fnBuilder($grouped[$id]);
             }
             $siblings[$k] = $sibling;
         }
@@ -29,7 +29,7 @@ function LCS_BuildTree($flat_array, $pidKey, $openNodes = true, $selectedNode = 
     };
     if (isset($grouped[$parent]))
     {
-        $tree = $fnBuilder($grouped[$parent]);
+        $tree= $fnBuilder($grouped[$parent]);
     }
     else
     {
@@ -41,7 +41,7 @@ function LCS_BuildTree($flat_array, $pidKey, $openNodes = true, $selectedNode = 
 function LCS_CreateCommentsTemplate($obj_model,$pid_key)
 {
     $data = LCS_BuildTree($obj_model->comments->toArray(), $pid_key, false, false, 1);
-    $data = json_encode($data[1]);
+    $data = json_encode($data);
     $result =  view('laravel_comments_system.frontend.index',compact('data'));
     return $result ;
 }
