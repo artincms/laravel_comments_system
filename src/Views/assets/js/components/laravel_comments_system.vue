@@ -12,6 +12,9 @@
                     :model="treeData">
             </Item>
         </v-bar>
+        <div v-if="this.$store.state.quote_id != 0"  >
+            <div >{{this.$store.state.quote_id}}</div>
+        </div>
         <commentForm ref="mainForm" :model="treeData" :hasquote="false"  id="mainForm"></commentForm>
     </ul>
 
@@ -23,11 +26,24 @@
 
     export default {
         name:'laravel_comments_system',
-        props: ['target_model_name', 'target_id', 'target_parent_column_name','userId'],
+        props: ['target_model_name', 'target_id', 'target_parent_column_name'],
         data: function () {
             return {
                 treeData: [],
             }
+        },
+        computed : {
+            quote () {
+                if(this.$store.state.quote_id != 0)
+                {
+                    return array ;
+                }
+                else
+                {
+                    return '0' ;
+                }
+            },
+
         },
         mounted () {
             this.getdata();
@@ -35,8 +51,10 @@
         methods: {
             getdata: function () {
                 axios.post("/LCS/getData", {model: this.target_model_name, id: this.target_id, pid_key: this.target_parent_column_name}).then((response) => {
-                this.treeData = response.data;
-            });
+                    this.treeData = response.data;
+                    this.$store.state.user_id = response.data.user_id ;
+                    this.$store.state.data_array = response.data.data_array ;
+                });
             }
         },
         components: {

@@ -14,9 +14,6 @@
             </div>
             <div class="comment_area_left">
                 <div class="comment_content">
-                    <div v-if="model.quote_id !=0">
-                        dddd
-                    </div>
                     <div class="comment_created_at">{{model.created_at}}</div>
                     <h5><a href="#">faramarz</a></h5>
                     <p>{{model.comment}}</p>
@@ -90,8 +87,8 @@
         },
         methods: {
             setQuote: function (e) {
-                this.$refs.mainForm.hasquote = true
-               //this.hasquote=  e.currentTarget.dataset.id ;
+                this.$store.state.hasquote = true ;
+                this.$store.state.quote_id = e.currentTarget.dataset.id ;
             },
             toggle: function () {
                 if (this.isFolder) {
@@ -111,6 +108,8 @@
                 })
             },
             showForm: function () {
+                this.$store.state.quote_id = 0;
+                this.$store.state.hasquote = false;
                 if (this.showForm) {
                     this.openForm = !this.openForm
                 }

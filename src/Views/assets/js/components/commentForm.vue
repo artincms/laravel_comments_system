@@ -11,9 +11,8 @@
             <input type="hidden" name="parent_id" :value="model.id">
             <input class="section_id" type="hidden" name="target_id" :value="model.target_id">
             <input class="section_type" type="hidden" name="target_type" :value="model.target_type">
-            <input class="section_type" type="hidden" name="target_type" v-model="hasquote">
             <input class="comment_type" type="hidden" name="comment_type" value="comment_reply">
-            <div class="row" v-if="userId = 0 " style="padding:10px">
+            <div class="row" v-if=" this.$store.state.user_id == 0 " style="padding:10px">
                 <div class="col-sm-6">
                     <div class="input-group input-group-sm chatMessageControls">
                         <input name="name" type="text" class="form-control clear_after_comment" placeholder="Name .." aria-describedby="sizing-addon3" v-model="name">
@@ -66,7 +65,6 @@
                 parent_id:'',
                 section_id:'',
                 section_type:'',
-                userId:this.$parent.userId,
                 comment : '',
             }
         },
@@ -89,12 +87,15 @@
                         comment:this.comment,
                         parent_id:this.model.id,
                         target_id:this.model.target_id,
-                        target_type:this.model.target_type
+                        target_type:this.model.target_type,
+                        quote_id: this.$store.state.quote_id
                     }).then((response) => {
                         if(response.data.success)
                     {
                         this.name = this.email =this.comment= '';
                         e.target.reset();
+                        this.$store.state.quote_id = 0,
+                        this.$store.state.hasquote = false,
                         this.success = 'you commented successfully ';
                     }
                 });
@@ -102,7 +103,7 @@
 
             },
             checkForm: function () {
-                if (this.userId = 0)
+                if ( this.$store.state.user_id = 0)
                 {
                     if (!this.name) {
                         this.errors.push("Name required.");

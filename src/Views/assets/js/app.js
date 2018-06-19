@@ -8,7 +8,10 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+window.Vuex = require('vuex')
 var VueScrollTo = require('vue-scrollto');
+
+Vue.use(Vuex)
 Vue.use(VueScrollTo, {
     container: "body",
     duration: 1000,
@@ -22,17 +25,19 @@ Vue.use(VueScrollTo, {
     y: true
 })
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+const store = new Vuex.Store({
+    state: {
+        hasquote: false,
+        user_id:0,
+        quote_id:0,
+        data_array:[],
+    },
+})
 
-//Vue.component('laravel_comments_system', require('./components/frontendComment.vue'));
-// define the item component
 Vue.component('laravel_comments_system', require('./components/laravel_comments_system.vue'));
 window.onload = function () {
-   const comments = new Vue({
-        el: '#comments'
+    const comments = new Vue({
+        el: '#comments',
+        store: store,
     });
 }
