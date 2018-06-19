@@ -1,19 +1,29 @@
 <template>
+
     <ul class="formComments" id="item_comment">
-        <Item
-                class="item"
-                :model="treeData">
-        </Item>
-        <commentForm class="commentForm" :model="treeData"></commentForm>
+        <button type="button" class="btn btn-primary col-md-12" v-scroll-to="'#mainForm'">Leave New Comment</button>
+        <v-bar wrapper="wrapper"
+               vBar=""
+               vBarInternal=""
+               hBar=""
+               hBarInternal="">
+            <Item
+                    class="item"
+                    :model="treeData">
+            </Item>
+        </v-bar>
+        <commentForm ref="mainForm" :model="treeData" :hasquote="false"  id="mainForm"></commentForm>
     </ul>
+
 </template>
 <script>
     import Item from './item.vue';
     import commentForm from './commentForm.vue';
+    import VBar from 'v-bar'
 
     export default {
         name:'laravel_comments_system',
-        props: ['target_model_name', 'target_id', 'target_parent_column_name'],
+        props: ['target_model_name', 'target_id', 'target_parent_column_name','userId'],
         data: function () {
             return {
                 treeData: [],
@@ -30,12 +40,14 @@
             }
         },
         components: {
-            Item,commentForm
+            Item,commentForm,VBar
         },
     }
 </script>
 
 <style scoped>
     @import  '../../../../public/vendor/laravel_comments_system/css/comment.css';
-
+    .wrapper {
+        height: 700px;
+    }
 </style>

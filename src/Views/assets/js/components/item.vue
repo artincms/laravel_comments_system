@@ -14,6 +14,9 @@
             </div>
             <div class="comment_area_left">
                 <div class="comment_content">
+                    <div v-if="model.quote_id !=0">
+                        dddd
+                    </div>
                     <div class="comment_created_at">{{model.created_at}}</div>
                     <h5><a href="#">faramarz</a></h5>
                     <p>{{model.comment}}</p>
@@ -25,6 +28,10 @@
                         <i class="fa fa-reply"></i>
                         <span>Reply</span>
                     </button>
+                    <a v-scroll-to="'#mainForm'" @click="setQuote" :data-id="model.id"  ref="quoteButton"   class="btn btn-default btn-sm btn_quote_comment" type="button">
+                        <i class="fas fa-quote-right"></i>
+                        <span>Quote</span>
+                    </a>
                 </div>
                 <div class="clearfixed"></div>
             </div>
@@ -45,8 +52,8 @@
             </Item>
         </div>
         <div class="clearfixed"></div>
-    </div>
 
+    </div>
 </template>
 
 <script>
@@ -82,7 +89,10 @@
             },
         },
         methods: {
-
+            setQuote: function (e) {
+                this.$refs.mainForm.hasquote = true
+               //this.hasquote=  e.currentTarget.dataset.id ;
+            },
             toggle: function () {
                 if (this.isFolder) {
                     this.open = !this.open

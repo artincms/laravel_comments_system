@@ -11,8 +11,9 @@
             <input type="hidden" name="parent_id" :value="model.id">
             <input class="section_id" type="hidden" name="target_id" :value="model.target_id">
             <input class="section_type" type="hidden" name="target_type" :value="model.target_type">
+            <input class="section_type" type="hidden" name="target_type" v-model="hasquote">
             <input class="comment_type" type="hidden" name="comment_type" value="comment_reply">
-            <div class="row" style="padding:10px">
+            <div class="row" v-if="userId = 0 " style="padding:10px">
                 <div class="col-sm-6">
                     <div class="input-group input-group-sm chatMessageControls">
                         <input name="name" type="text" class="form-control clear_after_comment" placeholder="Name .." aria-describedby="sizing-addon3" v-model="name">
@@ -27,17 +28,21 @@
             </div>
             <div class="row" style="padding: 10px;">
                 <div class="col-xs-12 col-md-12">
+                        <div v-if="hasquote">{{message}}</div>
+                        <hr>
                     <div class="input-group input-group-sm chatMessageControls">
                         <span style="" class="input-group-addon comment_leave_message" id="sizing-addon3">Comment</span>
-                        <textarea  name="comment" id="comment_text" type="text" class="form-control comment_text_area clear_after_comment" placeholder="wtite your message here..." aria-describedby="sizing-addon3" v-model="comment"></textarea>
+                        <textarea name="comment" id="comment_text" type="text" class="form-control comment_text_area clear_after_comment" placeholder="wtite your message here..."
+                                  aria-describedby="sizing-addon3" v-model="comment">
+                        </textarea>
                     </div>
                 </div>
             </div>
             <div class="row" style="margin:15px 0 10px">
                 <div class="col-xs-12" style="padding-left: 10px;">
                     <div style="float:left;">
-                        <button style="font-size: 12px;" name="commentReplySubmit" class="btn btn-primary commentReplySubmit" type="submit"><i class="fa fa-send"></i>Send</button>
-                        <button style="font-size: 12px; margin-left: 2px;" id="clearMessageButton" class="btn btn-default"type="reset" value="reset">Clear</button>
+                        <button style="font-size: 12px;" name="commentReplySubmit" class="btn btn-primary commentReplySubmit" type="submit">Send</button>
+                        <button @click.prevent="clearForm" style="font-size: 12px; margin-left: 2px;" id="clearMessageButton" class="btn btn-default"type="button" value="reset">Clear</button>
                     </div>
                 </div>
             </div>
@@ -51,20 +56,27 @@
 <script>
     export default {
         name: "commentForm",
-        props: ['model'],
+        props: ['model','hasquote'],
         data: function () {
             return {
                 errors: [],
                 success:[],
                 name:'',
                 email:'',
-                comment:'',
                 parent_id:'',
                 section_id:'',
-                section_type:''
+                section_type:'',
+                userId:this.$parent.userId,
+                comment : '',
             }
         },
+        computed : {
+
+        },
         methods: {
+            updateValue: function (model) {
+                this.$emit('input', model);
+            },
             commentSubmit:function (e) {
                 this.errors=[];
                 this.success='';
@@ -90,22 +102,29 @@
 
             },
             checkForm: function () {
-                if (!this.name) {
-                    this.errors.push("Name required.");
-                }
-                if (!this.comment) {
-                    this.errors.push("Comment required.");
-                }
-                if (!this.email) {
-                    this.errors.push('Email required.');
-                } else if (!this.validEmail(this.email)) {
-                    this.errors.push('Valid email required.');
+                if (this.userId = 0)
+                {
+                    if (!this.name) {
+                        this.errors.push("Name required.");
+                    }
+                    if (!this.comment) {
+                        this.errors.push("Comment required.");
+                    }
+                    if (!this.email) {
+                        this.errors.push('Email required.');
+                    } else if (!this.validEmail(this.email)) {
+                        this.errors.push('Valid email required.');
+                    }
                 }
             },
             validEmail: function (email) {
                 var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return re.test(email);
             },
+            clearForm : function (e) {
+                this.name = this.email =this.comment= '';
+            }
+
         },
 
     }

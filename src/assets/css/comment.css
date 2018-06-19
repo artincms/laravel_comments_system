@@ -272,8 +272,8 @@ div#comments {
 
 .comment_theme {
   position: relative;
+  padding: 1%;
 }
-
 .comment_area_right {
   position: absolute;
   width: 60px;

@@ -45,3 +45,16 @@ function LCS_CreateCommentsTemplate($obj_model,$pid_key)
     $result =  view('laravel_comments_system.frontend.index',compact('data'));
     return $result ;
 }
+
+function LCS_getUserId ()
+{
+    if (auth()->check())
+    {
+        $user_id = auth()->id();
+    }
+    else
+    {
+        $user_id = 0;
+    }
+    return $user_id;
+}

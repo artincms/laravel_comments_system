@@ -8,6 +8,19 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+var VueScrollTo = require('vue-scrollto');
+Vue.use(VueScrollTo, {
+    container: "body",
+    duration: 1000,
+    easing: "ease-in-out",
+    offset: -60,
+    cancelable: true,
+    onStart: false,
+    onDone: false,
+    onCancel: false,
+    x: false,
+    y: true
+})
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
