@@ -282,6 +282,18 @@ div#comments {
   top: 13px;
 }
 
+.main_quote {
+  background-color: #dadada!important;
+  width: 100%;
+  margin: auto;
+  border: 1px dashed black;
+  padding: 1%;
+}
+div#mainForm {
+  margin-top: 1%;
+  background-color: #e8e8e8;
+  padding: 1%;
+}
 .commenter_avatar {
   border: 1px solid grey;
   padding: 1px;
@@ -310,9 +322,9 @@ div#comments {
 }
 
 .comment_created_at{
-  position: absolute;
-  top:8px;
-  right: 20px;
+  position: relative;
+  float: right;
+  margin-right: 1%;
   font-size: 12px;
 }
 .comment_area_left p {

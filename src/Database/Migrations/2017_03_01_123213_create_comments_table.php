@@ -15,14 +15,16 @@ class CreateCommentsTable extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('target_id')->unsigned();
-            $table->string('target_type', 255);
+            $table->integer('user_id')->unsigned()->default(0);
+            $table->integer('section_id')->unsigned();
+            $table->string('section_type', 255);
             $table->string('name', 255)->nullable()->default(null);
             $table->string('email', 255)->nullable()->default(null);
             $table->text('comment')->nullable()->default(null);
             $table->smallInteger('approved')->unsigned()->default(0);
             $table->integer('parent_id')->unsigned()->default(0);
-            $table->enum('view', array('1','0'))->nullable()->default('0');
+            $table->enum('seen_by_admin', array('1','0'))->nullable()->default('0');
+            $table->integer('has_quate')->unsigned()->default(0);
             $table->integer('created_by')->unsigned()->default(0);
             $table->timestamps();
             $table->softDeletes();

@@ -8,10 +8,12 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-window.Vuex = require('vuex')
+window.Vuex = require('vuex');
+const trans = window.VueTranslate = require('vue-translate-plugin');
 var VueScrollTo = require('vue-scrollto');
 
-Vue.use(Vuex)
+Vue.use(Vuex);
+Vue.use(VueTranslate);
 Vue.use(VueScrollTo, {
     container: "body",
     duration: 1000,
@@ -27,10 +29,11 @@ Vue.use(VueScrollTo, {
 
 const store = new Vuex.Store({
     state: {
-        hasquote: false,
         user_id:0,
         quote_id:0,
+        canComment:false,
         data_array:[],
+        model:[],
     },
 })
 

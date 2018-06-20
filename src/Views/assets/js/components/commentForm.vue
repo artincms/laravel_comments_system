@@ -15,23 +15,22 @@
             <div class="row" v-if=" this.$store.state.user_id == 0 " style="padding:10px">
                 <div class="col-sm-6">
                     <div class="input-group input-group-sm chatMessageControls">
-                        <input name="name" type="text" class="form-control clear_after_comment" placeholder="Name .." aria-describedby="sizing-addon3" v-model="name">
+                        <input name="name" type="text" class="form-control clear_after_comment" :placeholder="t('name_place_holder')" aria-describedby="sizing-addon3" v-model="name">
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="input-group input-group-sm chatMessageControls">
-                        <input name="email" type="email" class="form-control clear_after_comment" placeholder="Email .." aria-describedby="sizing-addon3" v-model="email">
+                        <input name="email" type="email" class="form-control clear_after_comment" :placeholder="t('email_place_holder')" aria-describedby="sizing-addon3" v-model="email">
                     </div>
                 </div>
                 <div class="clearfixed"></div>
             </div>
             <div class="row" style="padding: 10px;">
                 <div class="col-xs-12 col-md-12">
-                        <div v-if="hasquote">{{message}}</div>
-                        <hr>
+                    <hr>
                     <div class="input-group input-group-sm chatMessageControls">
-                        <span style="" class="input-group-addon comment_leave_message" id="sizing-addon3">Comment</span>
-                        <textarea name="comment" id="comment_text" type="text" class="form-control comment_text_area clear_after_comment" placeholder="wtite your message here..."
+                        <span style="" class="input-group-addon comment_leave_message" id="sizing-addon3">{{t('comment')}}</span>
+                        <textarea name="comment" id="comment_text" type="text" class="form-control comment_text_area clear_after_comment" :placeholder="t('write_your_message_here')"
                                   aria-describedby="sizing-addon3" v-model="comment">
                         </textarea>
                     </div>
@@ -40,8 +39,8 @@
             <div class="row" style="margin:15px 0 10px">
                 <div class="col-xs-12" style="padding-left: 10px;">
                     <div style="float:left;">
-                        <button style="font-size: 12px;" name="commentReplySubmit" class="btn btn-primary commentReplySubmit" type="submit">Send</button>
-                        <button @click.prevent="clearForm" style="font-size: 12px; margin-left: 2px;" id="clearMessageButton" class="btn btn-default"type="button" value="reset">Clear</button>
+                        <button style="font-size: 12px;" name="commentReplySubmit" class="btn btn-primary commentReplySubmit" type="submit">{{ t('send') }}</button>
+                        <button @click.prevent="clearForm" style="font-size: 12px; margin-left: 2px;" id="clearMessageButton" class="btn btn-default"type="button" value="reset">{{ t('clear') }}</button>
                     </div>
                 </div>
             </div>
@@ -55,7 +54,7 @@
 <script>
     export default {
         name: "commentForm",
-        props: ['model','hasquote'],
+        props: ['model'],
         data: function () {
             return {
                 errors: [],
@@ -95,15 +94,14 @@
                         this.name = this.email =this.comment= '';
                         e.target.reset();
                         this.$store.state.quote_id = 0,
-                        this.$store.state.hasquote = false,
-                        this.success = 'you commented successfully ';
+                        this.success ='you_commented_successfully';
                     }
                 });
                 }
 
             },
             checkForm: function () {
-                if ( this.$store.state.user_id = 0)
+                if ( this.$store.state.user_id == 0)
                 {
                     if (!this.name) {
                         this.errors.push("Name required.");

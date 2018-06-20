@@ -5,8 +5,8 @@ function LCS_BuildTree($flat_array, $pidKey, $openNodes = true, $selectedNode = 
     $grouped = array();
     foreach ($flat_array as $sub)
     {
+        $sub['name'] =LCS_getUserData($sub['user_id'])['name'] ;
         $sub['text'] = $sub['name'];
-        $sub['a_attr'] = ['class' => 'link_to_category jstree_a_tag', 'data-id' => LFM_getEncodeId($sub['id'])];
         if ((int)$sub['id'] == (int)$selectedNode)
         {
             $sub['state'] = ['selected' => true, 'opened' => true];
@@ -57,4 +57,22 @@ function LCS_getUserId ()
         $user_id = 0;
     }
     return $user_id;
+}
+
+function LCS_getUserData($user_id)
+{
+    $user = config('laravel_comments_system.userModel')::find($user_id);
+    if ($user)
+    {
+        $user['name'] = $user->name ;
+        $user['email'] = $user->email ;
+        $user['profile_pic'] = 'Public' ;
+    }
+    else
+    {
+        $user['name'] = 'Public' ;
+        $user['email'] = 'Public' ;
+        $user['profile_pic'] = 'Public' ;
+    }
+    return $user ;
 }
