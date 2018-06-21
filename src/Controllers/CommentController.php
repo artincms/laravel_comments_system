@@ -3,13 +3,19 @@
 namespace ArtinCMS\LCS\Controllers;
 
 use App\Article;
+use App\User;
+use Datatables;
+use Validator;
 use ArtinCMS\LCS\Model\Comment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Traits\LaravelCommentSystem;
+
 
 
 class CommentController extends Controller
 {
+    use LaravelCommentSystem ;
     public function getdata(Request $request)
     {
         $model = $request->model;
@@ -24,19 +30,19 @@ class CommentController extends Controller
         $data['target_type'] = $request->model;
         $data['created_at'] = '';
         //$data['lang'] ='"'.app()->getLocale() .'"';
-        $data['lang'] =(string)app()->getLocale() ;
+        $data['lang'] = (string)app()->getLocale();
         $data['user_id'] = LCS_getUserId();
-        if ($data['user_id'] == 0 && config('laravel_comments_system.autoPublish') == false)
+        if ($data['user_id'] == 0 && config('laravel_comments_system.guestCanComments') == false)
         {
-            $data['canComment']=false ;
+            $data['canComment'] = false;
         }
         else
         {
-            $data['canComment']=true ;
+            $data['canComment'] = true;
         }
         foreach ($model->comments->toArray() as $value)
         {
-            $data['data_array'][$value['id'] ]=$value;
+            $data['data_array'][$value['id']] = $value;
         }
         if (config('laravel_comments_system.autoPublish'))
         {
@@ -52,7 +58,7 @@ class CommentController extends Controller
 
     public function saveComment(Request $request)
     {
-        if (LCS_getUserId()== 0 && config('laravel_comments_system.autoPublish') == false)
+        if (LCS_getUserId() == 0 && config('laravel_comments_system.guestCanComments') == false)
         {
             $result['success'] = false;
         }
@@ -98,4 +104,35 @@ class CommentController extends Controller
         }
 
     }
+
+    public function indexCommentBackend()
+    {
+        return view('laravel_comments_system::backend.index') ;
+    }
+
+    public function getCommentDataTable()
+    {
+        $query = Comment::query() ;
+        return datatables()->eloquent($query)
+            ->addColumn('title', function ($data)
+            {
+                $function = config('laravel_comments_system.Trait.Method') ;
+                $res = $this->$function($data)['text'] ;
+                return  $res;
+            })
+            ->addColumn('url', function ($data)
+            {
+                $function = config('laravel_comments_system.Trait.Method') ;
+                $res = $this->$function($data)['url'] ;
+                return  $res;
+            })
+            ->toJson();
+    }
+
+    public function showComment()
+    {
+
+    }
+
+
 }

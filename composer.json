@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "ArtinCMS\\LCS\\": "src"
+            "ArtinCMS\\LCS\\": "src/"
         },
         "files": [
             "src/Helpers/Functions/Comment.php"
