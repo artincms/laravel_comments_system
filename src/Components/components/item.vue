@@ -7,7 +7,7 @@
                 :model="model">
         </Item>
     </div>
-    <div class="comment_theme" v-else>
+    <div class="comment_theme" :id="'item_comment_'+model.id" v-else>
         <div class="comment_area">
             <div class="comment_area_right">
                 <img class="commenter_avatar" src="http://www.derayati.ir/FM/SRC/ID/-1/user_avatar.png">

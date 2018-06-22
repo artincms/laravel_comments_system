@@ -1,4 +1,16 @@
 <script type="text/javascript">
+    $(document).off("click", '#showModalComment');
+    $(document).on('click', '#showModalComment', function (e){
+        e.preventDefault() ;
+        var src = $(this).attr('data-href') ;
+        var iframe = $('#modal_iframe_show_comment');
+        iframe.attr("src",src);
+        setTimeout(function() {
+            var $contents = $('#modal_iframe_show_comment').contents();
+            $contents.scrollTo($contents.find('#item_comment_10'));
+        }, 2000);
+    });
+
     var getSysProcessRoute = '{{route('LCS.getCommentDataTable')}} ';
     var sys_process_grid_columns =[
         {
@@ -47,8 +59,8 @@
             name: 'action',
             mRender: function (data, type, row) {
                 html =
-                    '<a id="showMoalComment" href="#"><i class="fa fa-trash"></i></a>' +
-                    '<a href="#"><i class="fa fa-eye"></i></a>' ;
+                    '<a id="trashCommetn" href="#"><i class="fa fa-trash"></i></a>' +
+                    '<a id="showModalComment" data-toggle="modal" data-target="#create_modal_show_comment" data-id="'+row.id+'" href="#" data-href="'+row.url+'"><i class="fa fa-eye"></i></a>' ;
                 return html ;
             }
         },

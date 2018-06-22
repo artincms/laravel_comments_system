@@ -1,4 +1,4 @@
-<div class="modal fade" id="create_modal" tabindex="-1" role="dialog" aria-labelledby="showComment" aria-hidden="true">
+<div class="modal fade" id="create_modal_show_comment" tabindex="-1" role="dialog" aria-labelledby="showComment" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
                 <div class="embed-responsive embed-responsive-16by9">
-                    <iframe class="modal_iframe" src=""></iframe>
+                    <iframe id="modal_iframe_show_comment" src=""></iframe>
                 </div>
             </div>
             <div class="modal-footer">

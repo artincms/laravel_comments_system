@@ -40,7 +40,10 @@ class LCSServiceProvider extends ServiceProvider
 		    __DIR__ . '/Config/LCS.php' => config_path('laravel_comments_system.php'),
 	    ]);
         $this->publishes([
-            __DIR__ . '/assets/vue/components/frontendComment.vue' => resource_path('assets/js/components/frontendComment.vue'),
+            __DIR__ . '/Traits/LaravelCommentSystem.php' => app_path('Traits/LaravelCommentSystem.php'),
+        ]);
+        $this->publishes([
+            __DIR__ . '/Components' => resource_path('assets/js'),
         ]);
     }
 

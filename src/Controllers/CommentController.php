@@ -28,7 +28,7 @@ class CommentController extends Controller
         $data['parent_id'] = 0;
         $data['target_id'] = $request->id;
         $data['target_type'] = $request->model;
-        $data['created_at'] = '';
+        $data['created_at'] = 'default';
         //$data['lang'] ='"'.app()->getLocale() .'"';
         $data['lang'] = (string)app()->getLocale();
         $data['user_id'] = LCS_getUserId();
