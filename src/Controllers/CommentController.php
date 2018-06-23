@@ -5,6 +5,7 @@ namespace ArtinCMS\LCS\Controllers;
 use App\Article;
 use App\User;
 use Datatables;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use ArtinCMS\LCS\Model\Comment;
 use Illuminate\Http\Request;
@@ -12,10 +13,10 @@ use App\Http\Controllers\Controller;
 use App\Traits\LaravelCommentSystem;
 
 
-
 class CommentController extends Controller
 {
-    use LaravelCommentSystem ;
+    use LaravelCommentSystem;
+
     public function getdata(Request $request)
     {
         $model = $request->model;
@@ -61,76 +62,181 @@ class CommentController extends Controller
         if (LCS_getUserId() == 0 && config('laravel_comments_system.guestCanComments') == false)
         {
             $result['success'] = false;
+            return json_encode($result);
         }
         else
         {
-            $comment = new Comment;
-            $comment->user_id = LCS_getUserId();
-            $comment->target_id = $request->target_id;
-            $comment->target_type = $request->target_type;
-            $comment->quote_id = $request->quote_id;
-            if ($comment->user_id == 0)
+            $validator = Validator::make($request->all(), [
+                'comment' => 'required',
+            ]);
+
+            if ($validator->fails())
             {
-                $comment->name = $request->name;
-                $comment->email = $request->email;
+                $result['error'] = $validator->errors();
+                $result['success'] = false;
+                return json_encode($result);
             }
             else
             {
-                if (\Auth::user()->name)
+                $comment = new Comment;
+                $comment->user_id = LCS_getUserId();
+                $comment->target_id = $request->target_id;
+                $comment->target_type = $request->target_type;
+                $comment->quote_id = $request->quote_id;
+                if ($comment->user_id == 0)
                 {
-                    $comment->name = \Auth::user()->name;
+                    $comment->name = $request->name;
+                    $comment->email = $request->email;
                 }
                 else
                 {
-                    $comment->name = 'No name';
+                    if (\Auth::user()->name)
+                    {
+                        $comment->name = \Auth::user()->name;
+                    }
+                    else
+                    {
+                        $comment->name = 'No name';
+                    }
+                    if (\Auth::user()->email)
+                    {
+                        $comment->email = \Auth::user()->email;
+                    }
+                    else
+                    {
+                        $comment->email = 'not define';
+                    }
                 }
-                if (\Auth::user()->email)
-                {
-                    $comment->email = \Auth::user()->email;
-                }
-                else
-                {
-                    $comment->email = 'not define';
-                }
+
+                $comment->comment = $request->comment;
+                $comment->parent_id = $request->parent_id;
+                $comment->created_by = LCS_getUserId();
+                $comment->save();
+                $result['success'] = true;
+                $result['autoPublish'] = config('laravel_comments_system.autoPublish');
+                return response()->json($result);
             }
 
-            $comment->comment = $request->comment;
-            $comment->parent_id = $request->parent_id;
-            $comment->created_by = LCS_getUserId();
-            $comment->save();
-            $result['success'] = true;
-            $result['autoPublish'] = config('laravel_comments_system.autoPublish');
-            return response()->json($result);
         }
 
     }
 
     public function indexCommentBackend()
     {
-        return view('laravel_comments_system::backend.index') ;
+        return view('laravel_comments_system::backend.index');
     }
 
     public function getCommentDataTable()
     {
-        $query = Comment::query() ;
+        $query = Comment::query();
         return datatables()->eloquent($query)
-            ->addColumn('title', function ($data)
-            {
-                $function = config('laravel_comments_system.Trait.Method') ;
-                $res = $this->$function($data)['text'] ;
-                return  $res;
+            ->editColumn('id', function ($data) {
+                return LCS_getEncodeId($data->id);
             })
-            ->addColumn('url', function ($data)
-            {
-                $function = config('laravel_comments_system.Trait.Method') ;
-                $res = $this->$function($data)['url'] ;
-                return  $res;
+            ->addColumn('url', function ($data) {
+                $function = config('laravel_comments_system.Trait.Method');
+                $res = $this->$function($data)['url'];
+                return $res;
+            })
+            ->addColumn('title', function ($data) {
+                $function = config('laravel_comments_system.Trait.Method');
+                $res = $this->$function($data)['text'];
+                return $res;
             })
             ->toJson();
     }
 
-    public function showComment()
+    public function replyToComment($commentId)
     {
+        $commentId = LCS_GetDecodeId($commentId);
+        $comment = Comment::find($commentId);
+        $commentId=LCS_getEncodeId($comment->id);
+        return view('laravel_comments_system::backend.replyToComment', compact('comment','commentId'));
+    }
+
+    public function storeReplyToComment(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'comment' => 'required',
+            'name' => 'required',
+            'email' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $result['error'] = $validator->errors();
+            $result['success'] = false;
+            return json_encode($result);
+        } else {
+            $id=LCS_GetDecodeId($request->id) ;
+            $comment = Comment::find($id);
+            $comment->created_by =LCS_getUserId();
+            $comment->name = $request->name;
+            $comment->approved = $request->approved;
+            $comment->email = $request->email;
+            $comment->comment = $request->comment;
+            if ($request->reply)
+            {
+                $reply = new Comment ;
+                $reply->created_by =LCS_getUserId();
+                $reply->user_id =LCS_getUserId();
+                if (Auth::user())
+                {
+                    if (\Auth::user()->name)
+                    {
+                        $reply->name = \Auth::user()->name;
+                    }
+                    else
+                    {
+                        $reply->name = 'No name';
+                    }
+                    if (\Auth::user()->email)
+                    {
+                        $reply->email = \Auth::user()->email;
+                    }
+                    else
+                    {
+                        $reply->email = 'not define';
+                    }
+                }
+                else
+                {
+                    $reply->name = 'No name';
+                    $reply->email = 'not define';
+                }
+
+                $reply->comment =$request->reply;
+                $reply->target_id =$comment->target_id;
+                $reply->target_type =$comment->target_type;
+                $reply->approved = 1;
+                $reply->parent_id = $id;
+                $reply->save() ;
+                $comment->approved = 1 ;
+            }
+            $comment->save();
+            $result['message'][] = 'you commented successfully';
+            $result['success'] = true;
+            return json_encode($result);
+        }
+    }
+
+    function trashComment(Request $request)
+    {
+        $id = LCS_GetDecodeId($request->id);
+        Comment::destroy($id);
+        $result['message'][] = __('commentBackend.operation_is_success');
+        $result['success'] = true;
+        return json_encode($result);
+    }
+
+    function approveComment(Request $request)
+    {
+        $id = LCS_GetDecodeId($request->id);
+        $comment = Comment::find($id);
+        $comment->approved = 1 ;
+        $comment->save();
+        $result['message'][] = __('commentBackend.operation_is_success');
+        $result['success'] = true;
+        return json_encode($result);
 
     }
 

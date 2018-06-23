@@ -5,7 +5,7 @@ function LCS_BuildTree($flat_array, $pidKey, $openNodes = true, $selectedNode = 
     $grouped = array();
     foreach ($flat_array as $sub)
     {
-        $sub['name'] =LCS_getUserData($sub['user_id'])['name'] ;
+        $sub['name'] = LCS_getUserData($sub['user_id'])['name'];
         $sub['text'] = $sub['name'];
         if ((int)$sub['id'] == (int)$selectedNode)
         {
@@ -29,7 +29,7 @@ function LCS_BuildTree($flat_array, $pidKey, $openNodes = true, $selectedNode = 
     };
     if (isset($grouped[$parent]))
     {
-        $tree= $fnBuilder($grouped[$parent]);
+        $tree = $fnBuilder($grouped[$parent]);
     }
     else
     {
@@ -38,15 +38,15 @@ function LCS_BuildTree($flat_array, $pidKey, $openNodes = true, $selectedNode = 
     return $tree;
 }
 
-function LCS_CreateCommentsTemplate($obj_model,$pid_key)
+function LCS_CreateCommentsTemplate($obj_model, $pid_key)
 {
     $data = LCS_BuildTree($obj_model->comments->toArray(), $pid_key, false, false, 1);
     $data = json_encode($data);
-    $result =  view('laravel_comments_system.frontend.index',compact('data'));
-    return $result ;
+    $result = view('laravel_comments_system.frontend.index', compact('data'));
+    return $result;
 }
 
-function LCS_getUserId ()
+function LCS_getUserId()
 {
     if (auth()->check())
     {
@@ -64,15 +64,54 @@ function LCS_getUserData($user_id)
     $user = config('laravel_comments_system.userModel')::find($user_id);
     if ($user)
     {
-        $user['name'] = $user->name ;
-        $user['email'] = $user->email ;
-        $user['profile_pic'] = 'Public' ;
+        $user['name'] = $user->name;
+        $user['email'] = $user->email;
+        $user['profile_pic'] = 'Public';
     }
     else
     {
-        $user['name'] = 'Public' ;
-        $user['email'] = 'Public' ;
-        $user['profile_pic'] = 'Public' ;
+        $user['name'] = 'Public';
+        $user['email'] = 'Public';
+        $user['profile_pic'] = 'Public';
     }
-    return $user ;
+    return $user;
+}
+
+function LCS_createBackendCommentHtml()
+{
+    $src = route('LCS.indexCommentBackend');
+    $html = '<iframe style="width:100%;height: calc(100vh - 51px);    max-height: calc(100vh - 50px);    border: none;" id="modalIframeShowReplyComment" src="'.$src.'"></iframe>';
+    return $html ;
+
+}
+
+function LCS_getEncodeId($id)
+{
+    $hashids = new \Hashids\Hashids(md5('SadeghiComment'));
+    return $hashids->encode($id);
+}
+
+function LCS_GetDecodeId($id, $route = false)
+{
+    $my_routes = [
+        'LCS.indexCommentBackend',
+        'LCS.replyToComment',
+    ];
+
+    $hashids = new \Hashids\Hashids(md5('SadeghiComment'));
+    if ($route)
+    {
+        if (in_array($route->getName(), $my_routes))
+        {
+            return $hashids->decode($id)[0];
+        }
+        else
+        {
+            return $id;
+        }
+    }
+    else
+    {
+        return $hashids->decode($id)[0];
+    }
 }

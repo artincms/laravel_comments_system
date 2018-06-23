@@ -33,7 +33,7 @@ function dataTablesGrid(selector, var_grid_name, url, columns, more_data,row_sel
             searchable: false,
             orderable: false,
             width: '1%',
-            className: 'dt-body-center',
+            className: '',
             render: function (data, type, full, meta) {
                 return '<input type="checkbox">';
             }

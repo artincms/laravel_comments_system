@@ -1,12 +1,9 @@
 @extends('laravel_comments_system::backend.layouts.master')
 @section('content')
-    <h1>Comment Manager</h1>
-    <div class="clearfix"></div>
     <table id="SysProcessGridData"class="table table-hover" style="width:100%">
         <thead>
         <tr>
             <th></th>
-            <th>id</th>
             <th>name</th>
             <th>email</th>
             <th>comment</th>
