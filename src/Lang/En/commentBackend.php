@@ -51,7 +51,9 @@ return [
     'some_thing_is_wrong' => 'Some thing is wrong . Please check console log',
     'yes_approve_it' => 'Yes approved it',
     'your_comment_was_be_confirmed' => 'Your comment was be confirmed',
-    'you_want_confirm_this_commment' => 'you want to confirm this comment ?',
+    'you_want_confirm_this_commment' => 'Are you want to confirm this comment ?',
+    'you_want_dissaprove_this_commment' => 'Are you want dissaprove this comment ?',
+    'yes_dissapprove_it' => 'Yes dissaprove it',
 
 
 

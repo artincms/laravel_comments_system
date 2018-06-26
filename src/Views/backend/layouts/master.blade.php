@@ -4,7 +4,6 @@
     <title>@yield('page_title')</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8">
-    {{--add style sheet--}}
     <link href="{{ asset('vendor/laravel_comments_system/css/build/init_core.min.css') }}" rel="stylesheet" rel="stylesheet">
     <link href="{{ asset('vendor/laravel_comments_system/css/customBackend.css') }}" rel="stylesheet" rel="stylesheet">
     @yield('add_css')

@@ -7,10 +7,10 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
-window.Vuex = require('vuex');
-const trans = window.VueTranslate = require('vue-translate-plugin');
-var VueScrollTo = require('vue-scrollto');
+window.Vue = require('../../../public/vendor/laravel_comments_system/packages/vue/dist/vue.js');
+window.Vuex = require('../../../public/vendor/laravel_comments_system/packages/vuex/dist/vuex.js');
+const trans = window.VueTranslate = require('../../../public/vendor/laravel_comments_system/packages/vue-translate-plugin/dist/vue-translate.js');
+window.VueScrollTo = require('../../../public/vendor/laravel_comments_system/packages/vue-scrollto/vue-scrollto.js');
 
 Vue.use(Vuex);
 Vue.use(VueTranslate);

@@ -7,8 +7,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="embed-responsive embed-responsive-16by9">
-                    <iframe id="modal_iframe_show_comment" src=""></iframe>
+                <div id="comments">
+                    <laravel_comments_system :target_model_name="'App\\Article'" :target_id="1" :target_parent_column_name="'parent_id'" :user-id="{{LCS_getUserId()}}" ></laravel_comments_system>
                 </div>
             </div>
             <div class="modal-footer">

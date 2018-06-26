@@ -45,6 +45,10 @@ class LCSServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/Components' => resource_path('assets/js'),
         ]);
+        // publish language
+        $this->publishes([
+            __DIR__ . '/Lang/En/commentBackend.php' => resource_path('lang/en/commentBackend.php'),
+        ]);
     }
 
     /**

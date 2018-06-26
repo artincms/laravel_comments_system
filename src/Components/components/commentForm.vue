@@ -36,13 +36,6 @@
                     </div>
                 </div>
             </div>
-            <vue-recaptcha
-                    ref="recaptcha"
-                    sitekey="6LfQXWAUAAAAADhMlSIi72WoWdQW_yBwfIb8SzwI"
-
-            >
-
-            </vue-recaptcha>
             <div class="row" style="margin:15px 0 10px">
                 <div class="col-xs-12" style="padding-left: 10px;">
                     <div style="float:left;">
@@ -61,7 +54,6 @@
 
 <script>
 
-    import VueRecaptcha from 'vue-recaptcha';
     export default {
         name: "commentForm",
         props: ['model'],
@@ -110,17 +102,6 @@
                 }
 
             },
-            createRecaptcha () {
-                let script = document.createElement('script')
-                script.setAttribute('async', 'async')
-                script.setAttribute('defer', 'defer')
-                script.id = 'recaptchaScript'
-                script.src = 'https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit'
-                script.onload = function() {
-                    document.getElementsByTagName('head')[0].appendChild(script)
-                }
-            },
-
             checkForm: function () {
                 if ( this.$store.state.user_id == 0)
                 {
@@ -145,12 +126,6 @@
                 this.name = this.email =this.comment= '';
             }
 
-        },
-        created () {
-            this.createRecaptcha();
-        },
-        components: {
-            VueRecaptcha
         },
     }
 </script>

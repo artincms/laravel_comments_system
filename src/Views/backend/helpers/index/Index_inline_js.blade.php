@@ -41,20 +41,74 @@
             searchable: false,
             orderable: false,
             width: '1%',
-            className: 'dt-body-center',
-            render: function (data, type, full, meta) {
-                return '<input type="checkbox" class="check checkComment">';
+            render: function (data, type, row) {
+                return '<input type="checkbox" id="toggleCheckComment" class="check checkComment" data-id="'+row.id+'">';
             }
+        },
+        {
+          title:'Username',
+            data:'user.name',
+            name:'user.name',
+            visible :false
+
+        },
+        {
+            title:'UserEmail',
+            data:'user.email',
+            name:'user.email',
+            visible :false
+        },
+        {
+            title:'Approve',
+            data:'approved',
+            name:'approved',
+            orderable: false,
+            mRender: function (data, type, row) {
+                if (row.approved == 0)
+                {
+                    return '<a id="approvedButton"  data-id="' + row.id + '" data-value="'+row.approved+'"  class="margin_left_5" href=""><i class="fa fa-square-o" aria-hidden="true"></i></a>'  ;
+                }
+                else
+                {
+                    return  '<a id="approvedButton"  data-id="' + row.id + '"  data-value="'+row.approved+'"  class="margin_left_5" href=""><i class="fa fa-check-square-o" aria-hidden="true"></i></a>'  ;
+                }
+
+            }
+
         },
         {
             title: "Name",
             data: "name",
-            name: "name"
+            name: "name",
+            orderable: false,
+            mRender: function (data, type, row) {
+               if (!row.name)
+               {
+                   return row.user.name ;
+               }
+               else
+               {
+                   return row.name ;
+               }
+
+            }
         },
         {
             title: "Email",
             data: "email",
-            name: "email"
+            name: "email",
+            orderable: false,
+            mRender: function (data, type, row) {
+                if (!row.email)
+                {
+                    return row.user.email ;
+                }
+                else
+                {
+                    return row.email ;
+                }
+
+            }
         },
         {
             title: "Comment",
@@ -64,27 +118,31 @@
         {
             title: "Title",
             data: "title",
-            name: "title"
+            name: "title",
+            mRender: function (data, type, row) {
+                html = '<a href="'+row.url+'">'+row.title+'</a>';
+                return html ;
+            }
         },
         {
             title: "Url",
             data: "url",
             name: "url",
-            mRender: function (data, type, row) {
-                html = '<a href="'+row.url+'">URL</a>';
-                return html ;
-            }
+            searchable: false,
+            orderable: false,
+            visible :false
         },
         {
             title: "Action",
             data: 'action',
             name: 'action',
+            searchable: false,
+            orderable: false,
             mRender: function (data, type, row) {
                 html =
-                    '<a class="margin_left_5" id="trashComment" data-id="' + row.id + '" href="#"><i class="fa fa-trash"></i></a>' +
-                    '<a class="margin_left_5" id="showModalComment" data-toggle="modal" data-target="#create_modal_show_comment" data-id="' + row.id + '" href="' + row.url + '"><i class="fa fa-eye"></i></a>' +
-                    '<a id="approvedButton"  data-id="' + row.id + '"  class="margin_left_5" href=""><i class="fa fa-check-square-o" aria-hidden="true"></i></a>' +
-                    '<a class="margin_left_5"  id="replyToComment" href="#" data-href="' + getUrl('replyToComment', row.id) + '" data-toggle="modal" data-target="#createModalForReplyComment"> <i class="fa fa-reply"></i></a>';
+                    '<a class="margin_left_5" id="showModalComment" data-toggle="modal" data-target="#create_modal_show_comment" data-id="' + row.id + '" href="#" data-href="' + row.url + '"><i class="fa fa-eye"></i></a>' +
+                    '<a class="margin_left_5"  id="replyToComment" href="#" data-href="' + getUrl('replyToComment', row.id) + '" data-toggle="modal" data-target="#createModalForReplyComment"> <i class="fa fa-reply"></i></a>'+
+                    '<a class="margin_left_5" id="trashComment" data-id="' + row.id + '" href="#"><i class="fa fa-trash"></i></a>' ;
                 return html;
             }
         },
@@ -151,11 +209,23 @@
     $(document).off("click", '#approvedButton');
     $(document).on('click', '#approvedButton', function (e) {
         e.preventDefault() ;
+        var id = $(this).attr('data-id');
+        var value = $(this).attr('data-value');
+        if (value == 0)
+        {
+            swalTitle ='@lang('commentBackend.you_want_confirm_this_commment')';
+            swalButton ='@lang('commentBackend.yes_approve_it')';
+        }
+        else
+        {
+            swalTitle ='@lang('commentBackend.you_want_dissaprove_this_commment')';
+            swalButton ='@lang('commentBackend.yes_dissapprove_it')';
+        }
         id = $(this).attr('data-id');
         swal({
-            title: '@lang('commentBackend.you_want_confirm_this_commment')',
+            title: swalTitle,
             cancelButtonText: '@lang('commentBackend.no_cancel')',
-            confirmButtonText: '@lang('commentBackend.yes_approve_it')',
+            confirmButtonText:swalButton ,
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -166,25 +236,24 @@
             reverseButtons: true
         }).then((result) => {
             if (result.value) {
-            var id = $(this).attr('data-id');
-            setApproved(id);
+            setApproved([id],value);
 
         }
     })
     });
-    function setApproved(id) {
+    function setApproved(id,value) {
         $.ajax({
             type: "POST",
             url: "{{route('LCS.approveComment')}}",
             dataType: "json",
             data :{
-                id:id ,
+                id:id ,value:value
             },
             success: function (result) {
                 if (result.success == true) {
                     swal({
                         type: 'success',
-                        title: '@lang('commentBackend.your_comment_was_be_confirmed')',
+                        title: '@lang('commentBackend.operation_is_success')',
                     })
 
                     refresh();
@@ -222,30 +291,75 @@
         });
         $('.toggle_select').attr("id","select_all");
     });
-    /*_________________________________________________________________________________________________________________________________*/
-    $( document ).ready(function() {
-        dataTablesGrid('#SysProcessGridData', 'SysProcessGridData', getSysProcessRoute, sys_process_grid_columns);
-    });
 
     /*_________________________________________________________________________________________________________________________________*/
     function refresh() {
-        $('#SysProcessGridData_wrapper').html(table);
-        dataTablesGrid('#SysProcessGridData', 'SysProcessGridData', getSysProcessRoute, sys_process_grid_columns);
+        SysProcessGridData.ajax.reload();
     }
 
-    var table = '<table id="SysProcessGridData"class="table table-hover" style="width:100%">' +
-        '        <thead>' +
-        '        <tr>' +
-        '            <th></th>' +
-        '            <th>id</th>' +
-        '            <th>name</th>' +
-        '            <th>email</th>' +
-        '            <th>comment</th>' +
-        '            <th>title</th>' +
-        '            <th>url</th>' +
-        '        </tr>' +
-        '        </thead>' +
-        '    </table>';
     /*_________________________________________________________________________________________________________________________________*/
+    $( "#create_modal_show_comment" ).on('shown', function(){
+        alert("I want this to appear after the modal has opened!");
+    });
+    /*_________________________________________________________________________________________________________________________________*/
+    $( document ).ready(function() {
+        dataTablesGrid('#SysProcessGridData', 'SysProcessGridData', getSysProcessRoute, sys_process_grid_columns);
+        $('#SysProcessGridData_wrapper').prepend('' +
+            '<div id="sysProcessGridTooblar" class="sysProTollbar">' +
+            '   <button class="btn btn-danger" id="bulkDelete">Bulk</button>' +
+            '   <button class="btn btn-success" id="ApproveAll">Approve</button>' +
+            '</div>' +
+            '<hr />');
+    });
+
+    /*_________________________________________________________________________________________________________________________________*/
+    $(document).off("click", '#toggleCheckComment');
+    $(document).on('click', '#toggleCheckComment', function (e) {
+        $(this).toggleClass('selected');
+        if($(this).hasClass('selected') == true)
+        {
+            $(this).attr("checked", "checked");
+        }
+        else if($(this).hasClass('selected') == false)
+        {
+            $(this).removeAttr('checked') ;
+        }
+    });
+    /*_________________________________________________________________________________________________________________________________*/
+    $(document).off("click", '#ApproveAll');
+    $(document).on('click', '#ApproveAll', function (e) {
+       var items = getAllSelected();
+        swalTitle ='@lang('commentBackend.you_want_confirm_this_commment')';
+        swalButton ='@lang('commentBackend.yes_approve_it')';
+        swal({
+            title: swalTitle,
+            cancelButtonText: '@lang('commentBackend.no_cancel')',
+            confirmButtonText:swalButton ,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+            setApproved(items,0);
+            $('.toggle_select').attr('id','select_all');
+            $('.toggle_select').prop('checked', false);
+
+        }
+        })
+    });
+    function getAllSelected()
+    {
+        var items = [];
+        $('.selected').each(function(k , v) {
+            id=$(this).attr('data-id');
+            items.push(id);
+        });
+        return items ;
+    }
 
 </script>

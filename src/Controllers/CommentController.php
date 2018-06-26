@@ -88,25 +88,7 @@ class CommentController extends Controller
                     $comment->name = $request->name;
                     $comment->email = $request->email;
                 }
-                else
-                {
-                    if (\Auth::user()->name)
-                    {
-                        $comment->name = \Auth::user()->name;
-                    }
-                    else
-                    {
-                        $comment->name = 'No name';
-                    }
-                    if (\Auth::user()->email)
-                    {
-                        $comment->email = \Auth::user()->email;
-                    }
-                    else
-                    {
-                        $comment->email = 'not define';
-                    }
-                }
+
 
                 $comment->comment = $request->comment;
                 $comment->parent_id = $request->parent_id;
@@ -121,6 +103,11 @@ class CommentController extends Controller
 
     }
 
+    public function showCommentFronted ($id,$target_id)
+    {
+        return view('laravel_comments_system::frontend.showCommentFronted', compact('id','target_id'));
+    }
+
     public function indexCommentBackend()
     {
         return view('laravel_comments_system::backend.index');
@@ -128,10 +115,20 @@ class CommentController extends Controller
 
     public function getCommentDataTable()
     {
-        $query = Comment::query();
+        $query = Comment::with('user')->select('comments.*');
         return datatables()->eloquent($query)
             ->editColumn('id', function ($data) {
                 return LCS_getEncodeId($data->id);
+            })
+            ->editColumn('user', function ($data) {
+                if(!isset($data->user ))
+                {
+                    return ['name' => null ,'email'=>null];
+                }
+                else
+                {
+                    return $data->user->toArray() ;
+                }
             })
             ->addColumn('url', function ($data) {
                 $function = config('laravel_comments_system.Trait.Method');
@@ -230,14 +227,23 @@ class CommentController extends Controller
 
     function approveComment(Request $request)
     {
-        $id = LCS_GetDecodeId($request->id);
-        $comment = Comment::find($id);
-        $comment->approved = 1 ;
-        $comment->save();
-        $result['message'][] = __('commentBackend.operation_is_success');
-        $result['success'] = true;
+      foreach ($request->id as $item_id)
+      {
+          $id = LCS_GetDecodeId($item_id);
+          $comment = Comment::find($id);
+          if ($request->value == 0)
+          {
+              $comment->approved = 1 ;
+          }
+          else
+          {
+              $comment->approved = 0 ;
+          }
+          $comment->save();
+          $result['message'][] = __('commentBackend.operation_is_success');
+          $result['success'] = true;
+      }
         return json_encode($result);
-
     }
 
 
