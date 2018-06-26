@@ -12,7 +12,7 @@ return [
     'api-key' => env('SMSIR-API-KEY','Your api key'),
     // ======================================================================
     //allow user to upload private file in filemanager
-    'autoPublish'=>false,
+    'autoPublish'=>true,
     'guestCanComments'=>true,
     'loginUrl'=>'http://127.0.0.1:8000/login',
     'registerUrl'=>'http://127.0.0.1:8000/register',
