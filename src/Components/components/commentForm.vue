@@ -53,7 +53,7 @@
 </template>
 
 <script>
-
+    import axios from '../../../../../public/vendor/laravel_gallery_system/packages/axios/index.js'
     export default {
         name: "commentForm",
         props: ['model'],

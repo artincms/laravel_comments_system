@@ -43,7 +43,7 @@ class LCSServiceProvider extends ServiceProvider
             __DIR__ . '/Traits/LaravelCommentSystem.php' => app_path('Traits/LaravelCommentSystem.php'),
         ]);
         $this->publishes([
-            __DIR__ . '/Components' => resource_path('assets/js'),
+            __DIR__ . '/Components/components' => resource_path('assets/js/components/laravel_comment_system'),
         ]);
         // publish language
         $this->publishes([

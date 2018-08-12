@@ -41,18 +41,26 @@ class CommentController extends Controller
         {
             $data['canComment'] = true;
         }
-        foreach ($model->comments->toArray() as $value)
+        if($model->comments)
         {
-            $data['data_array'][$value['id']] = $value;
-        }
-        if (config('laravel_comments_system.autoPublish'))
-        {
-            $data['children'] = LCS_BuildTree($model->comments->toArray(), $pid_key, false, false, 0);
+            foreach ($model->comments->toArray() as $value)
+            {
+                $data['data_array'][$value['id']] = $value;
+            }
+            if (config('laravel_comments_system.autoPublish'))
+            {
+                $data['children'] = LCS_BuildTree($model->comments->toArray(), $pid_key, false, false, 0);
+            }
+            else
+            {
+                $data['children'] = LCS_BuildTree($model->comments->where('approved', '=', 1)->toArray(), $pid_key, false, false, 0);
+
+            }
         }
         else
         {
-            $data['children'] = LCS_BuildTree($model->comments->where('approved', '=', 1)->toArray(), $pid_key, false, false, 0);
-
+            $data['data_array'] =[];
+            $data['children']=[];
         }
         return json_encode($data);
     }

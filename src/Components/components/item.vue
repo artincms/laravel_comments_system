@@ -19,7 +19,7 @@
                             <div class="comment_area_right quote_picture">
                                 <img class="commenter_avatar" src="http://www.derayati.ir/FM/SRC/ID/-1/user_avatar.png">
                             </div>
-                            <div class="comment_area_left">
+                            <div class="comment_area_left"  v-if="this.$store.state.data_array.length>0">
                                 <div class="comment_created_at">{{this.$store.state.data_array[model.quote_id].created_at}}</div>
                                 <h5>{{model.name}}</h5>
                                 <div>{{this.$store.state.data_array[model.quote_id].comment}}</div>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="clearfixed"></div>
-                <div class="comment_btn_area" v-if="this.$store.state.canComment ">
+                <div class="comment_btn_area" v-if="canComment">
                     <button @click="showForm" :data-item_id='model.id' :data-target_id="model.target_id" :data-target_type="model.target_type" :data-parent_id='model.parent_id' class="btn btn-default btn-sm btn_reply_comment" type="button">
                         <i class="fa fa-reply"></i>
                         <span>{{t('reply')}}</span>
@@ -86,7 +86,9 @@
                 return this.model.children &&
                     this.model.children.length
             },
-
+            canComment:function () {
+              return  this.$store.state.canComment
+            },
             open:function () {
                 if (this.model.children &&this.model.children.length)
                 {
