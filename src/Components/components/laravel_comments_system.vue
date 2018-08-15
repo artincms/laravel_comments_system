@@ -1,7 +1,7 @@
 <template>
     <div class="show_comment">
         <ul class="formComments" id="item_comment">
-            <button type="button" class="btn btn-primary col-md-12" @click="closeQuote" v-scroll-to="'#mainForm'">{{ t('leave_new_comment') }}</button>
+            <button type="button" class="btn btn-primary btn-block col-md-12" @click="closeQuote" v-scroll-to="'#mainForm'">{{ t('leave_new_comment') }}</button>
             <v-bar wrapper="wrapper"  vBar=""  vBarInternal=""  hBar="" hBarInternal="">
                 <Item
                         class="item"
@@ -10,14 +10,14 @@
             </v-bar>
             <div  id="mainForm" v-if="this.$store.state.canComment ">
                 <div v-if="this.$store.state.quote_id != 0"  >
-                    <div class="comment_content main_quote">
+                    <div class="main_quote" :class="{comment_content:!rtl,comment_content_rtl:rtl}">
                         <button type="button" class="close close_open_reply" style="position: absolute;right: 7px;z-index: 10;" @click="closeQuote">×</button>
-                        <div class="comment_area_right quote_picture">
+                        <div class="quote_picture" :class="{comment_area_right:!rtl ,comment_area_right_rtl:rtl }">
                             <img class="commenter_avatar" src="http://www.derayati.ir/FM/SRC/ID/-1/user_avatar.png">
                         </div>
-                        <div class="comment_area_left">
+                        <div :class="{comment_area_left:!rtl , comment_area_left_rtl:rtl}">
                             <div class="comment_created_at" style="margin-right: 5%;">{{this.$store.state.data_array[this.$store.state.quote_id].created_at}}</div>
-                            <h5>{{this.$store.state.data_array[this.$store.state.quote_id].name}}</h5>
+                            <h5  style="text-align: left;">{{this.$store.state.data_array[this.$store.state.quote_id].name}}</h5>
                             <div>{{this.$store.state.data_array[this.$store.state.quote_id].comment}}</div>
                             <div class="clearfixed"></div>
                         </div>
@@ -34,14 +34,28 @@
     import commentForm from './commentForm.vue';
     import VBar from 'v-bar'
     import axios from '../../../../../public/vendor/laravel_gallery_system/packages/axios/index.js'
-    export default {
+    import Vuex from "vuex";
+    Vue.use(Vuex);
+    const store = new Vuex.Store({
+        state: {
+            user_id:0,
+            quote_id:0,
+            canComment:false,
+            data_array:[],
+            model:[],
+            rtl : true
+        },
+    });
+    export default  {
         name: 'laravel_comments_system',
         props: ['target_model_name', 'target_id', 'target_parent_column_name'],
         data: function () {
             return {
                 treeData: [],
+                rtl:true
             }
         },
+        store: store,
         mounted() {
             this.getData()
         },
@@ -53,17 +67,15 @@
                     this.$store.state.canComment = response.data.canComment ;
                     this.$store.state.data_array = response.data.data_array ;
                     this.$store.state.data = response.data ;
-                    console.log( this.$store.state);
                     if (response.data.lang =='en')
                     {
                         this.$translate.setLang("en");
+                        this.$store.state.rtl=false ;
                     }
-                    else if (response.data.lang =='fa')
+                    else
                     {
                         this.$translate.setLang("fa");
-                    } else
-                    {
-                        this.$translate.setLang("en");
+                        this.$store.state.rtl=true ;
                     }
                 });
             },

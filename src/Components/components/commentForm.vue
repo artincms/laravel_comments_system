@@ -8,8 +8,8 @@
             </ul>
         </div>
         <form id="form_reply_submit_comment" action=""  @submit.prevent="commentSubmit" novalidate="true">
-            <input type="hidden" name="parent_id" :value="model.id">
-            <input class="section_id" type="hidden" name="target_id" :value="model.target_id">
+            <input type="hidden" name="parent_id" :value="model.encode_id">
+            <input class="section_id" type="hidden" name="target_id" :value="model.encode_target_id">
             <input class="section_type" type="hidden" name="target_type" :value="model.target_type">
             <input class="comment_type" type="hidden" name="comment_type" value="comment_reply">
             <div class="row" v-if=" this.$store.state.user_id == 0 " style="padding:10px">
@@ -29,8 +29,8 @@
                 <div class="col-xs-12 col-md-12">
                     <hr>
                     <div class="input-group input-group-sm chatMessageControls">
-                        <span style="" class="input-group-addon comment_leave_message" id="sizing-addon3">{{t('comment')}}</span>
-                        <textarea name="comment" id="comment_text" type="text" class="form-control comment_text_area clear_after_comment" :placeholder="t('write_your_message_here')"
+                        <span style="" class="input-group-addon comment_leave_message" id="sizing-addon3">نظر</span>
+                        <textarea rows="3" name="comment" id="comment_text" type="text" class="form-control comment_text_area clear_after_comment" :placeholder="t('write_your_message_here')"
                                   aria-describedby="sizing-addon3" v-model="comment">
                         </textarea>
                     </div>
@@ -86,8 +86,8 @@
                         name: this.name,
                         email:this.email,
                         comment:this.comment,
-                        parent_id:this.model.id,
-                        target_id:this.model.target_id,
+                        parent_id:this.model.encode_id,
+                        target_id:this.model.encode_target_id,
                         target_type:this.model.target_type,
                         quote_id: this.$store.state.quote_id
                     }).then((response) => {
@@ -96,7 +96,7 @@
                         this.name = this.email =this.comment= '';
                         e.target.reset();
                         this.$store.state.quote_id = 0,
-                        this.success ='you_commented_successfully';
+                        this.success ='پیغام شما با موفقیت ثبت گردید';
                     }
                 });
                 }

@@ -5,9 +5,9 @@ function LCS_BuildTree($flat_array, $pidKey, $openNodes = true, $selectedNode = 
     $grouped = array();
     foreach ($flat_array as $sub)
     {
-        $sub['name'] = LCS_getUserData($sub['user_id'])['name'];
+        $sub['name'] = LCS_getUserData($sub)['name'];
         $sub['text'] = $sub['name'];
-        if ((int)$sub['id'] == (int)$selectedNode)
+        if ((int)$sub['encode_id'] == (int)$selectedNode)
         {
             $sub['state'] = ['selected' => true, 'opened' => true];
 
@@ -59,8 +59,9 @@ function LCS_getUserId()
     return $user_id;
 }
 
-function LCS_getUserData($user_id)
+function LCS_getUserData($comment)
 {
+    $user_id=$comment['user_id'];
     $user = config('laravel_comments_system.userModel')::find($user_id);
     if ($user)
     {
@@ -70,8 +71,8 @@ function LCS_getUserData($user_id)
     }
     else
     {
-        $user['name'] = 'Public';
-        $user['email'] = 'Public';
+        $user['name'] =$comment['name'];
+        $user['email'] = $comment['email'];
         $user['profile_pic'] = 'Public';
     }
     return $user;
@@ -87,8 +88,16 @@ function LCS_createBackendCommentHtml()
 
 function LCS_getEncodeId($id)
 {
-    $hashids = new \Hashids\Hashids(md5('SadeghiComment'));
-    return $hashids->encode($id);
+    if ($id < 0)
+    {
+        return $id;
+    }
+    else
+    {
+        $hashids = new \Hashids\Hashids(md5('sadeghi'));
+
+        return $hashids->encode($id);
+    }
 }
 
 function LCS_GetDecodeId($id, $route = false)
@@ -98,20 +107,48 @@ function LCS_GetDecodeId($id, $route = false)
         'LCS.replyToComment',
     ];
 
-    $hashids = new \Hashids\Hashids(md5('SadeghiComment'));
-    if ($route)
+    if ((int)$id < 0)
     {
-        if (in_array($route->getName(), $my_routes))
-        {
-            return $hashids->decode($id)[0];
-        }
-        else
-        {
-            return $id;
-        }
+        return (int)$id;
     }
     else
     {
-        return $hashids->decode($id)[0];
+        $hashids = new \Hashids\Hashids(md5('sadeghi'));
+        if ($route)
+        {
+            if (in_array($route->getName(), $my_routes))
+            {
+                if ($hashids->decode($id) != [])
+                {
+                    if(isset($hashids->decode($id)[0]))
+                    {
+                        return $hashids->decode($id)[0];
+                    }
+                    else
+                    {
+                        return $id;
+                    }
+                }
+                else
+                {
+                    return $id;
+                }
+            }
+            else
+            {
+                return $id;
+            }
+        }
+        else
+        {
+            if(isset($hashids->decode($id)[0]))
+            {
+                return $hashids->decode($id)[0];
+            }
+            else
+            {
+                return $id ;
+            }
+        }
     }
 }

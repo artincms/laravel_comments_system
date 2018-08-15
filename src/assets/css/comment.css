@@ -98,6 +98,7 @@ div#comments {
   line-height: 35px;
   padding: 3px;
   background-color: #dddddd;
+  min-width: 43px;
 }
 .text_area_comment_message {
   color: black;
@@ -110,20 +111,25 @@ div#comments {
 
 .formComments {
 
-  direction: ltr;
+  direction: rtl;
   list-style-type: none;
   /*overflow-y: scroll;*/
   height: 100%;
   padding-bottom: 60px;
   padding-left: 0px;
+  padding-right: 0px;
+}
+textarea#comment_text {
+  min-height: 50px;
 }
 
 .formComments li {
-
   margin-bottom: 10px;
-
 }
 
+.show_comment_system {
+  margin-top: 10px;
+}
 .commentstep-1 {
   margin-right: 0px;
 }
@@ -280,8 +286,16 @@ div#comments {
   height: 60px;
   text-align: center;
   top: 13px;
+  left:0px;
 }
-
+.comment_area_right_rtl {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  top: 13px;
+  right:0px;
+}
 .main_quote {
   background-color: #dadada!important;
   width: 100%;
@@ -310,7 +324,11 @@ div#mainForm {
 .comment_area_left {
   position: relative;
   margin-left: 70px;
-  min-height: 110px;
+}
+
+.comment_area_left_rtl {
+  position: relative;
+  margin-right: 70px;
 }
 
 .comment_content {
@@ -319,8 +337,16 @@ div#mainForm {
   border-left: 3px solid #bbb;
   padding-right: 5px;
   background: #eeeeee;
+  min-height: 110px;
 }
-
+.comment_content_rtl {
+  position: relative;
+  padding-right: 8px;
+  border-right: 3px solid #bbb;
+  padding-left: 8px;
+  background: #eeeeee;
+  min-height: 110px;
+}
 .comment_created_at{
   position: relative;
   float: right;
@@ -328,7 +354,7 @@ div#mainForm {
   font-size: 12px;
 }
 .comment_area_left p {
-  padding-bottom: 40px;
+  padding-bottom: 65px;
 }
 
 .comment_area_left h5 {
@@ -353,7 +379,17 @@ div#mainForm {
   right: 8px;
 }
 
+.comment_btn_area_rtl {
+  position: absolute;
+  bottom: 14px;
+  left: 8px;
+}
+
 .comment_btn_area button span {
+  font-size: 12px;
+  line-height: 12px;
+}
+.comment_btn_area_rtl button span {
   font-size: 12px;
   line-height: 12px;
 }

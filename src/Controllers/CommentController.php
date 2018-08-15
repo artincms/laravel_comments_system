@@ -20,14 +20,17 @@ class CommentController extends Controller
     public function getdata(Request $request)
     {
         $model = $request->model;
-        $id = $request->id;
+        $id = LCS_GetDecodeId($request->id);
         $pid_key = $request->pid_key;
         $model = $model::find($id);
         $data['name'] = 'main';
         $data['comment'] = 'main';
         $data['id'] = 0;
+        $data['encode_id'] = 0;
+        $data['encode_parent_id'] = 0;
         $data['parent_id'] = 0;
         $data['target_id'] = $request->id;
+        $data['encode_target_id'] = $request->id;
         $data['target_type'] = $request->model;
         $data['created_at'] = 'default';
         //$data['lang'] ='"'.app()->getLocale() .'"';
@@ -41,19 +44,20 @@ class CommentController extends Controller
         {
             $data['canComment'] = true;
         }
-        if($model->comments)
+        $comments = $model->comments ;
+        if($comments)
         {
-            foreach ($model->comments->toArray() as $value)
+            foreach ($comments->toArray() as $value)
             {
-                $data['data_array'][$value['id']] = $value;
+                $data['data_array'][$value['encode_id']] = $value;
             }
             if (config('laravel_comments_system.autoPublish'))
             {
-                $data['children'] = LCS_BuildTree($model->comments->toArray(), $pid_key, false, false, 0);
+                $data['children'] = LCS_BuildTree($comments->toArray(), $pid_key, false, false, LCS_getEncodeId(0),'encode_id');
             }
             else
             {
-                $data['children'] = LCS_BuildTree($model->comments->where('approved', '=', 1)->toArray(), $pid_key, false, false, 0);
+                $data['children'] = LCS_BuildTree($comments>where('approved', '=', 1)->toArray(), $pid_key, false, false, 0,'encode_id');
 
             }
         }
@@ -67,6 +71,7 @@ class CommentController extends Controller
 
     public function saveComment(Request $request)
     {
+        //dd($request->all(),LFM_GetDecodeId($request->parent_id),LFM_GetDecodeId($request->target_id));
         if (LCS_getUserId() == 0 && config('laravel_comments_system.guestCanComments') == false)
         {
             $result['success'] = false;
@@ -88,9 +93,9 @@ class CommentController extends Controller
             {
                 $comment = new Comment;
                 $comment->user_id = LCS_getUserId();
-                $comment->target_id = $request->target_id;
+                $comment->target_id = LCS_GetDecodeId($request->target_id);
                 $comment->target_type = $request->target_type;
-                $comment->quote_id = $request->quote_id;
+                $comment->quote_id = LCS_GetDecodeId($request->quote_id);
                 if ($comment->user_id == 0)
                 {
                     $comment->name = $request->name;
@@ -99,7 +104,7 @@ class CommentController extends Controller
 
 
                 $comment->comment = $request->comment;
-                $comment->parent_id = $request->parent_id;
+                $comment->parent_id =  LCS_GetDecodeId($request->parent_id);
                 $comment->created_by = LCS_getUserId();
                 $comment->save();
                 $result['success'] = true;
