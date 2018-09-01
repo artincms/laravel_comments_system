@@ -49,6 +49,12 @@ class LCSServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/Lang/En/commentBackend.php' => resource_path('lang/en/commentBackend.php'),
         ]);
+        $this->publishes([
+            __DIR__ . '/Lang/FA/lcs_fronted.php' => resource_path('lang/fa/lcs_fronted.php'),
+        ]);
+        $this->publishes([
+            __DIR__ . '/Lang/En/lcs_fronted.php' => resource_path('lang/en/lcs_fronted.php'),
+        ]);
     }
 
     /**

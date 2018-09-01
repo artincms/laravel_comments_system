@@ -98,7 +98,8 @@
                 "you_commented_successfully": "پیام شما با موفقیت ثبت گردید .",
                 "name_place_holder": "نام ..",
                 "email_place_holder": "ایمیل ..",
-                "write_your_message_here": "پیام خود را بنویسید ..."
+                "write_your_message_here": "پیام خود را بنویسید ...",
+                "tanks_message" : "پیغام شما با موفقیت ثبت گردید"
             }
         }
     }

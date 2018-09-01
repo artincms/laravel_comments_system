@@ -50,7 +50,7 @@
 </template>
 
 <script>
-    import axios from '../../../../../public/vendor/laravel_gallery_system/packages/axios/index.js'
+    import axios from './lib/axios/index.js'
     export default {
         name: "commentForm",
         props: ['model'],
@@ -88,12 +88,12 @@
                         target_type:this.model.target_type,
                         quote_id: this.$store.state.quote_id
                     }).then((response) => {
-                        if(response.data.success)
+                    if(response.data.success)
                     {
                         this.name = this.email =this.comment= '';
                         e.target.reset();
-                        this.$store.state.quote_id = 0,
-                        this.success ='پیغام شما با موفقیت ثبت گردید';
+                        this.$store.state.quote_id = 0;
+                        this.success =response.data.message;
                     }
                 });
                 }

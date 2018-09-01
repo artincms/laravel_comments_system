@@ -108,6 +108,7 @@ class CommentController extends Controller
                 $comment->created_by = LCS_getUserId();
                 $comment->save();
                 $result['success'] = true;
+                $result['message'] = __('lcs_fronted.tanks_message');
                 $result['autoPublish'] = config('laravel_comments_system.autoPublish');
                 return response()->json($result);
             }
