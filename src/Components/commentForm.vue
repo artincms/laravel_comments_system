@@ -29,7 +29,7 @@
                 <div class="lgs_col-xs-12 lgs_col-md-12">
                     <hr>
                     <div class="lgs_input-group lgs_input-group-sm chatMessageControls">
-                        <span style="" class="lgs_input-group-addon comment_leave_message lgs_float_left">نظر</span>
+                        <span style="" class="lgs_input-group-addon comment_leave_message lgs_float_left">{{ t('comment') }}</span>
                         <textarea rows="3" name="comment" id="comment_text" type="text" class="lgs_form-control comment_text_area clear_after_comment" :placeholder="t('write_your_message_here')"
                                   aria-describedby="sizing-addon3" v-model="comment">
                         </textarea>
