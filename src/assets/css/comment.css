@@ -488,6 +488,7 @@ span.lgs_input-group-addon.comment_leave_message {
   width: 5%;
   line-height: 1.5;
   padding: 13px;
+  min-height:50px;
 }
 textarea#comment_text {
   width: 95%;
