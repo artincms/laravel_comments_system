@@ -107,7 +107,7 @@
 </script>
 
 <style scoped>
-    @import  '../../../../../public/vendor/laravel_comments_system/css/comment.css';
+    @import  './assets/css/comment.css';
     .wrapper {
         height: 700px;
     }
