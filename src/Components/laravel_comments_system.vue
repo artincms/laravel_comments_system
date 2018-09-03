@@ -2,18 +2,16 @@
     <div class="show_comment" :class="direction">
         <ul class="formComments" id="item_comment">
             <button type="button" class="lgs_btn lgs_btn-primary lgs_btn-block col-md-12" @click="closeQuote" v-scroll-to="'#mainForm'">{{ t('leave_new_comment') }}</button>
-            <v-bar wrapper="wrapper"  vBar=""  vBarInternal=""  hBar="" hBarInternal="">
-                <Item
-                        class="item"
-                        :model="treeData">
-                </Item>
-            </v-bar>
+            <Item
+                    class="item"
+                    :model="treeData">
+            </Item>
             <div  id="mainForm" v-if="this.$store.state.canComment ">
                 <div v-if="this.$store.state.quote_id != 0"  >
                     <div class="main_quote comment_content">
                         <button type="button" class="close close_open_reply" style="position: absolute;right: 7px;z-index: 10;" @click="closeQuote">×</button>
                         <div class="quote_picture comment_area_right">
-                            <img class="commenter_avatar" src="http://www.derayati.ir/FM/SRC/ID/-1/user_avatar.png">
+                            <img class="commenter_avatar" src='/LFM/DownloadFile/ID/0/small/user_avatar.png/100/272/208'>
                         </div>
                         <div class="comment_area_left">
                             <div class="comment_created_at" style="margin-right: 5%;">{{this.$store.state.data_array[this.$store.state.quote_id].created_at}}</div>
@@ -43,6 +41,7 @@
             canComment:false,
             data_array:[],
             model:[],
+            num_child :0,
             rtl : true
         },
     });
@@ -67,6 +66,7 @@
                     this.$store.state.canComment = response.data.canComment ;
                     this.$store.state.data_array = response.data.data_array ;
                     this.$store.state.data = response.data ;
+                    this.num_child = response.data.children.length;
                     if (response.data.lang =='en')
                     {
                         this.$translate.setLang("en");
@@ -109,6 +109,8 @@
 <style scoped>
     @import  './assets/css/comment.css';
     .wrapper {
-        height: 700px;
+        height:150px;
+        min-height:100px;
+        max-height: 200px;
     }
 </style>
