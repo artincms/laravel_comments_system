@@ -507,6 +507,7 @@ textarea#comment_text {
 }
 .ltr .comment_area_left {
   margin-left: 70px;
+  margin-right: 0px;
 }
 .ltr .comment_content {
   border-left: 3px solid #bbb;
@@ -519,6 +520,7 @@ textarea#comment_text {
 .ltr .comment_children {
   position: relative;
   margin-left: 70px;
+  margin-right:0px;
 }
 
 

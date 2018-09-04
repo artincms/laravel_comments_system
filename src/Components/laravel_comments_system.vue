@@ -28,11 +28,25 @@
     </div>
 </template>
 <script>
-    import Item from './item.vue';
-    import commentForm from './commentForm.vue';
-    import VBar from './lib/v-bar'
-    import axios from './lib/axios'
-    import Vuex from "./lib/vuex/dist/vuex.js";
+    import Item from './components/item.vue';
+    import commentForm from './components/commentForm.vue';
+    import Vuex from "vuex";
+    window.axios = require('axios');
+    import VueTranslate from 'vue-translate-plugin'
+    Vue.use(VueTranslate);
+    import VueScrollTo from 'vue-scrollto';
+    Vue.use(VueScrollTo, {
+        container: "body",
+        duration: 1000,
+        easing: "ease-in-out",
+        offset: -60,
+        cancelable: true,
+        onStart: false,
+        onDone: false,
+        onCancel: false,
+        x: false,
+        y: true
+    })
     Vue.use(Vuex);
     const store = new Vuex.Store({
         state: {
@@ -84,10 +98,10 @@
             },
         },
         components: {
-            Item,commentForm,VBar,
+            Item,commentForm
         },
         locales: {
-            en:  require('../../../../../public/vendor/laravel_comments_system/lang/en/comment.json'),
+            en:  require('./lang/en/comment.json'),
             fa: {
                 'leave_new_comment': 'کامنت جدید قرار دهید',
                 "send": "ارسال",

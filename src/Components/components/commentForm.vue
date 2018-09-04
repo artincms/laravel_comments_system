@@ -50,7 +50,6 @@
 </template>
 
 <script>
-    import axios from './lib/axios/index.js'
     export default {
         name: "commentForm",
         props: ['model'],
