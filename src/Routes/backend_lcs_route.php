@@ -8,6 +8,14 @@ Route::group(['prefix' => config('laravel_comments_system.backend_lcs_route_pref
     Route::post('trashComment', ['as' => 'LCS.trashComment', 'uses' => 'CommentController@trashComment']);
     Route::post('approveComment', ['as' => 'LCS.approveComment', 'uses' => 'CommentController@approveComment']);
 
+    Route::get('showSetting', ['as' => 'LCS.showSetting', 'uses' => 'CommentController@showSetting']);
+    Route::post('createCommentItems', ['as' => 'LCS.createCommentItems', 'uses' => 'CommentController@createCommentItems']);
+    Route::post('getCommentItemDatatable', ['as' => 'LCS.getCommentItemDatatable', 'uses' => 'CommentController@getCommentItemDatatable']);
+    Route::post('getEditSettingsForm', ['as' => 'LCS.getEditSettingsForm', 'uses' => 'CommentController@getEditSettingsForm']);
+    Route::post('editSetting', ['as' => 'LCS.editSetting', 'uses' => 'CommentController@editSetting']);
+    Route::post('changeSettingStatus', ['as' => 'LCS.changeSettingStatus', 'uses' => 'CommentController@changeSettingStatus']);
+    Route::post('trashSetting', ['as' => 'LCS.trashSetting', 'uses' => 'CommentController@trashSetting']);
+
     //decode id
     Route::bind('id',function ($v,$r){
         return LCS_GetDecodeId($v,$r);

@@ -4,14 +4,16 @@ namespace ArtinCMS\LCS\Controllers;
 
 use App\Article;
 use App\User;
-use Datatables;
+use ArtinCMS\LCS\Model\CommentItem;
+use ArtinCMS\LMM\Models\Morph;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use ArtinCMS\LCS\Model\Comment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Traits\LaravelCommentSystem;
-
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CommentController extends Controller
 {
@@ -129,7 +131,7 @@ class CommentController extends Controller
 
     public function getCommentDataTable()
     {
-        $query = Comment::with('user')->select('comments.*');
+        $query = Comment::with('user');
         return datatables()->eloquent($query)
             ->editColumn('id', function ($data) {
                 return LCS_getEncodeId($data->id);
@@ -144,15 +146,11 @@ class CommentController extends Controller
                     return $data->user->toArray() ;
                 }
             })
-            ->addColumn('url', function ($data) {
-                $function = config('laravel_comments_system.Trait.Method');
-                $res = $this->$function($data)['url'];
-                return $res;
-            })
             ->addColumn('title', function ($data) {
-                $function = config('laravel_comments_system.Trait.Method');
-                $res = $this->$function($data)['text'];
-                return $res;
+                return $data->title;
+            })
+            ->addColumn('url', function ($data) {
+                return $data->url;
             })
             ->toJson();
     }
@@ -241,24 +239,145 @@ class CommentController extends Controller
 
     function approveComment(Request $request)
     {
-      foreach ($request->id as $item_id)
-      {
-          $id = LCS_GetDecodeId($item_id);
-          $comment = Comment::find($id);
-          if ($request->value == 0)
-          {
-              $comment->approved = 1 ;
-          }
-          else
-          {
-              $comment->approved = 0 ;
-          }
-          $comment->save();
-          $result['message'][] = __('commentBackend.operation_is_success');
-          $result['success'] = true;
-      }
-        return json_encode($result);
+        $item = Comment::find(LFM_GetDecodeId($request->item_id));
+        if ($request->is_active == "true")
+        {
+            $item->approved = "1";
+            $res['message'] = ' مجموعه فعال گردید';
+        }
+        else
+        {
+            $item->approved = "0";
+            $res['message'] = 'مجموعه غیر فعال شد';
+        }
+        $item->save();
+        $res['success'] = true;
+        $res['title'] = 'وضعیت مجموعه تغییر پیدا کرد .';
+        return $res;
     }
 
+    function showSetting()
+    {
+        $morphs = Morph::select('id','name As text')->get();
+        return view('laravel_comments_system::backend.setting',compact('morphs'));
+    }
 
+    public function createCommentItems(Request $request)
+    {
+        $comment = new CommentItem ;
+        $comment->title = $request->title ;
+        $comment->morphable_id = $request->morph_id ;
+        if (auth()->check())
+        {
+            $auth = auth()->id();
+        }
+        else
+        {
+            $auth = 0;
+
+        }
+        $comment->created_by =$auth;
+        $comment->save() ;
+        $res =
+            [
+                'success' => true,
+                'title' => "ثبت آیتم",
+                'message' => 'آیتم با موفقیت ثبت شد.'
+            ];
+
+        return $res;
+    }
+
+    public function getCommentItemDatatable(Request $request)
+    {
+        $item = CommentItem::with('user');
+        return DataTables::eloquent($item)
+            ->editColumn('id', function ($data) {
+                return LCS_getEncodeId($data->id);
+            })
+            ->make(true);
+
+    }
+
+    public function getEditSettingsForm(Request $request)
+    {
+        $settings = CommentItem::find(LCS_GetDecodeId($request->item_id)) ;
+        $morphs = Morph::select('id','name As text')->get();
+        $settings_form = view('laravel_comments_system::backend.view.edit_setting', compact('settings','morphs'))->render();
+        $res =
+            [
+                'success' => true,
+                'setting_edit_view' => $settings_form
+            ];
+        throw new HttpResponseException(
+            response()
+                ->json($res, 200)
+                ->withHeaders(['Content-Type' => 'text/plain', 'charset' => 'utf-8'])
+        );
+    }
+
+    public function editSetting(Request $request)
+    {
+        $comment = CommentItem::find($request->item_id);
+        $comment->title = $request->title ;
+        $comment->morphable_id = $request->morph_id ;
+        if (auth()->check())
+        {
+            $auth = auth()->id();
+        }
+        else
+        {
+            $auth = 0;
+
+        }
+        $comment->created_by =$auth;
+        $comment->save() ;
+        $res =
+            [
+                'success' => true,
+                'title' => "ویرایش آیتم",
+                'message' => 'آیتم با موفقیت ثبت شد.'
+            ];
+
+        return $res;
+    }
+
+    public function changeSettingStatus(Request $request)
+    {
+        $item = CommentItem::find(LFM_GetDecodeId($request->item_id));
+        if ($request->is_active == "true")
+        {
+            $item->is_active = "1";
+            $res['message'] = ' آیتم فعال گردید';
+        }
+        else
+        {
+            $item->is_active = "0";
+            $res['message'] = 'آیتم غیر فعال شد';
+        }
+        $item->save();
+        $res['success'] = true;
+        $res['title'] = 'وضعیت آیتم تغییر پیدا کرد .';
+
+        return $res;
+    }
+
+    public function trashSetting(Request $request)
+    {
+        $item = CommentItem::find(LFM_GetDecodeId($request->item_id));
+        $item->delete();
+
+        $res =
+            [
+                'success' => true,
+                'title' => "حذف آیتم",
+                'message' => 'آیتم با موفقیت حذف شد.'
+            ];
+
+        throw new HttpResponseException(
+            response()
+                ->json($res, 200)
+                ->withHeaders(['Content-Type' => 'text/plain', 'charset' => 'utf-8'])
+        );
+    }
 }

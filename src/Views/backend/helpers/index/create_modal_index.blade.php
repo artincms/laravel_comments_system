@@ -40,3 +40,25 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="create_modal_show_settings" tabindex="-1" role="dialog" aria-labelledby="showSettings" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="titleReplyComment"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe id="showSettings" src=""></iframe>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="submitReplyComment">ذخیره</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">لغو</button>
+            </div>
+        </div>
+    </div>
+</div>

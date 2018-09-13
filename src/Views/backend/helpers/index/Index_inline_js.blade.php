@@ -1,6 +1,6 @@
 <script type="text/javascript">
-    $(document).off("click", '#showModalComment');
-    $(document).on('click', '#showModalComment', function (e) {
+    $(document).off("click", '.showModalComment');
+    $(document).on('click', '.showModalComment', function (e) {
         e.preventDefault();
         var src = $(this).attr('data-href');
         var iframe = $('#modal_iframe_show_comment');
@@ -11,8 +11,8 @@
     });
 
     /*_________________________________________________________________________________________________________________________________*/
-    $(document).off("click", '#replyToComment');
-    $(document).on('click', '#replyToComment', function (e) {
+    $(document).off("click", '.replyToComment');
+    $(document).on('click', '.replyToComment', function (e) {
         e.preventDefault();
         var src = $(this).attr('data-href');
         var iframe = $('#modalIframeShowReplyComment');
@@ -37,115 +37,80 @@
     var getSysProcessRoute = '{{route('LCS.getCommentDataTable')}} ';
     var sys_process_grid_columns = [
         {
-            title: '<input name="select_all" id="select_all" value="1" type="checkbox" class="check toggle_select"/>',
+            width: '5%',
+            data: 'id',
+            title: 'ردیف',
             searchable: false,
-            orderable: false,
-            width: '1%',
-            render: function (data, type, row) {
-                return '<input type="checkbox" id="toggleCheckComment" class="check checkComment" data-id="'+row.id+'">';
+            sortable: false,
+            render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
             }
         },
         {
-          title:'Username',
-            data:'user.name',
-            name:'user.name',
-            visible :false
-
-        },
-        {
-            title:'UserEmail',
-            data:'user.email',
-            name:'user.email',
-            visible :false
-        },
-        {
-            title:'Approve',
-            data:'approved',
-            name:'approved',
-            orderable: false,
-            mRender: function (data, type, row) {
-                if (row.approved == 0)
-                {
-                    return '<a id="approvedButton"  data-id="' + row.id + '" data-value="'+row.approved+'"  class="margin_left_5" href=""><i class="fa fa-square-o" aria-hidden="true"></i></a>'  ;
-                }
-                else
-                {
-                    return  '<a id="approvedButton"  data-id="' + row.id + '"  data-value="'+row.approved+'"  class="margin_left_5" href=""><i class="fa fa-check-square-o" aria-hidden="true"></i></a>'  ;
-                }
-
-            }
-
-        },
-        {
-            title: "Name",
-            data: "name",
-            name: "name",
-            orderable: false,
-            mRender: function (data, type, row) {
-               if (!row.name)
-               {
-                   return row.user.name ;
-               }
-               else
-               {
-                   return row.name ;
-               }
-
-            }
-        },
-        {
-            title: "Email",
-            data: "email",
-            name: "email",
-            orderable: false,
-            mRender: function (data, type, row) {
-                if (!row.email)
-                {
-                    return row.user.email ;
-                }
-                else
-                {
-                    return row.email ;
-                }
-
-            }
-        },
-        {
-            title: "Comment",
-            data: "comment",
-            name: "comment"
-        },
-        {
-            title: "Title",
             data: "title",
             name: "title",
+            title: 'عنوان',
             mRender: function (data, type, row) {
                 html = '<a href="'+row.url+'">'+row.title+'</a>';
                 return html ;
             }
         },
         {
-            title: "Url",
-            data: "url",
-            name: "url",
-            searchable: false,
-            orderable: false,
-            visible :false
+            data:'user.name',
+            name:'user.name',
+            title: 'نام کاربر',
+
         },
         {
-            title: "Action",
-            data: 'action',
-            name: 'action',
-            searchable: false,
-            orderable: false,
-            mRender: function (data, type, row) {
-                html =
-                    '<a class="margin_left_5" id="showModalComment" data-toggle="modal" data-target="#create_modal_show_comment" data-id="' + row.id + '" href="#" data-href="' + row.url + '"><i class="fa fa-eye"></i></a>' +
-                    '<a class="margin_left_5"  id="replyToComment" href="#" data-href="' + getUrl('replyToComment', row.id) + '" data-toggle="modal" data-target="#createModalForReplyComment"> <i class="fa fa-reply"></i></a>'+
-                    '<a class="margin_left_5" id="trashComment" data-id="' + row.id + '" href="#"><i class="fa fa-trash"></i></a>' ;
-                return html;
+            data:'user.email',
+            name:'user.email',
+            title: 'ایمیل کاربر',
+        },
+        {
+            data:'approved',
+            name:'approved',
+            title: 'تایید  نظر',
+            mRender: function (data, type, full) {
+                var ch = '';
+                if (parseInt(full.approved))
+                    ch = 'checked';
+                else
+                    ch = '';
+                return '<input class="styled " id="' + full.id + '" type="checkbox" name="special" data-item_id="' + full.id + '"  onchange="change_is_active_portfolio(this)"' + ch + '>'
             }
         },
+        {
+            data: "comment",
+            name: "comment",
+            title: "نظر",
+    },
+    {
+        width: '7%',
+        searchable: false,
+        sortable: false,
+        data: 'action', name: 'action', 'title': 'عملیات',
+        mRender: function (data, type, full) {
+            return '' +
+                '<div class="gallerty_menu float-right pointer" onclick="set_fixed_dropdown_menu(this)" data-toggle="dropdowns">' +
+                '<span>' +
+                '   <em class="fas fa-caret-down"></em>' +
+                '   <i class="fas fa-bars"></i> ' +
+                '</span>' +
+                '  <div class="dropdown_gallery hidden">' +
+                '    <a class="showModalComment pointer gallery_menu-item" data-target="#create_modal_show_comment" data-item_id="' + full.id + '" data-title="' + full.title + ' ">' +
+                '       <i class="fa fa-eye"></i><span class="ml-2">مشاهده آیتم ها</span>' +
+                '   </a>'+
+                '    <a class="replyToComment pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.title + ' ">' +
+                '       <i class="fa fa-reply"></i><span class="ml-2">پاسخ</span>' +
+                '   </a>'+
+                '    <a class="btn_trash_portfolio_related pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.title + ' ">' +
+                '       <i class="fa fa-trash"></i><span class="ml-2">حذف</span>' +
+                '   </a>'+
+            '  </div>' +
+            '</div>';
+
+        }
+    },
     ];
 
     function getUrl(name, id) {
@@ -154,8 +119,8 @@
     }
 
     /*_________________________________________________________________________________________________________________________________*/
-    $(document).off("click", '#trashComment');
-    $(document).on('click', '#trashComment', function (e) {
+    $(document).off("click", '.trashComment');
+    $(document).on('click', '.trashComment', function (e) {
         e.preventDefault();
         e.preventDefault();
         swal({
@@ -206,69 +171,7 @@
         });
     }
     /*_________________________________________________________________________________________________________________________________*/
-    $(document).off("click", '#approvedButton');
-    $(document).on('click', '#approvedButton', function (e) {
-        e.preventDefault() ;
-        var id = $(this).attr('data-id');
-        var value = $(this).attr('data-value');
-        if (value == 0)
-        {
-            swalTitle ='@lang('commentBackend.you_want_confirm_this_commment')';
-            swalButton ='@lang('commentBackend.yes_approve_it')';
-        }
-        else
-        {
-            swalTitle ='@lang('commentBackend.you_want_dissaprove_this_commment')';
-            swalButton ='@lang('commentBackend.yes_dissapprove_it')';
-        }
-        id = $(this).attr('data-id');
-        swal({
-            title: swalTitle,
-            cancelButtonText: '@lang('commentBackend.no_cancel')',
-            confirmButtonText:swalButton ,
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonClass: 'btn btn-success',
-            cancelButtonClass: 'btn btn-danger',
-            buttonsStyling: false,
-            reverseButtons: true
-        }).then((result) => {
-            if (result.value) {
-            setApproved([id],value);
 
-        }
-    })
-    });
-    function setApproved(id,value) {
-        $.ajax({
-            type: "POST",
-            url: "{{route('LCS.approveComment')}}",
-            dataType: "json",
-            data :{
-                id:id ,value:value
-            },
-            success: function (result) {
-                if (result.success == true) {
-                    swal({
-                        type: 'success',
-                        title: '@lang('commentBackend.operation_is_success')',
-                    })
-
-                    refresh();
-                }
-                else
-                {
-                    alert('@lang('commentBackend.some_thing_is_wrong')');
-                    console.log(result);
-                }
-            },
-            error: function (e) {
-            }
-        });
-    }
-    /*_________________________________________________________________________________________________________________________________*/
     $(document).off("click", '#select_all');
     $(document).on('click', '#select_all', function (e) {
         set_selected_all();
@@ -304,12 +207,12 @@
     /*_________________________________________________________________________________________________________________________________*/
     $( document ).ready(function() {
         dataTablesGrid('#SysProcessGridData', 'SysProcessGridData', getSysProcessRoute, sys_process_grid_columns);
-        $('#SysProcessGridData_wrapper').prepend('' +
-            '<div id="sysProcessGridTooblar" class="sysProTollbar">' +
-            '   <button class="btn btn-danger" id="bulkDelete">Bulk</button>' +
-            '   <button class="btn btn-success" id="ApproveAll">Approve</button>' +
-            '</div>' +
-            '<hr />');
+        // $('#SysProcessGridData_wrapper').prepend('' +
+        //     '<div id="sysProcessGridTooblar" class="sysProTollbar">' +
+        //     '   <button class="btn btn-danger" id="bulkDelete">Bulk</button>' +
+        //     '   <button class="btn btn-success" id="ApproveAll">Approve</button>' +
+        //     '</div>' +
+        //     '<hr />');
     });
 
     /*_________________________________________________________________________________________________________________________________*/
@@ -361,5 +264,46 @@
         });
         return items ;
     }
+
+    function change_is_active_portfolio(input) {
+        var checked = input.checked;
+        var item_id = input.id;
+        var parameters = {is_active: checked, item_id: item_id};
+        yesNoAlert('تغییر وضعیت نظر', 'از تغییر وضعیت نظر مطمئن هستید ؟', 'warning', 'بله، وضعیت نظر را تغییر بده!', 'لغو', set_portfolio_is_active, parameters, remove_checked, parameters);
+    }
+
+    function set_portfolio_is_active(params) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: "{{route('LCS.approveComment')}}",
+            data: params,
+            success: function (result) {
+            if (result.success) {
+                menotify('success', result.title, result.message);
+            }
+            else {
+
+            }
+        }
+    });
+    }
+
+    function remove_checked(params) {
+        var $this = $('#' + params.item_id);
+        if (params.is_active) {
+            $this.prop('checked', false);
+        }
+        else {
+            $this.prop('checked', true);
+        }
+    }
+
+    $(document).off("click", '#show_setting');
+    $(document).on('click', '#show_setting', function (e) {
+        var src = $(this).data('iframe_src');
+        var iframe = $('#modalIframeShowReplyComment');
+        iframe.attr("src", src);
+    });
 
 </script>
