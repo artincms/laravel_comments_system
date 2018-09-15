@@ -15,9 +15,5 @@ Route::group(['prefix' => config('laravel_comments_system.backend_lcs_route_pref
     Route::post('editSetting', ['as' => 'LCS.editSetting', 'uses' => 'CommentController@editSetting']);
     Route::post('changeSettingStatus', ['as' => 'LCS.changeSettingStatus', 'uses' => 'CommentController@changeSettingStatus']);
     Route::post('trashSetting', ['as' => 'LCS.trashSetting', 'uses' => 'CommentController@trashSetting']);
-
-    //decode id
-    Route::bind('id',function ($v,$r){
-        return LCS_GetDecodeId($v,$r);
-    });
+    Route::post('getReplyToCommentForm', ['as' => 'LCS.getReplyToCommentForm', 'uses' => 'CommentController@getReplyToCommentForm']);
 });

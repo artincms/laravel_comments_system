@@ -224,7 +224,7 @@
     $(document).on("click", ".btn_trash_settings", function () {
         var item_id = $(this).data('item_id');
         var title = $(this).data('title');
-        desc = 'بله مجموعه( ' + title + ' ) را حذف کن !';
+        desc = 'بله آیتم( ' + title + ' ) را حذف کن !';
         var parameters = {item_id: item_id};
         yesNoAlert('حذف مجموعه', 'از حذف مجموعه مطمئن هستید ؟', 'warning', desc, 'لغو', trash_setting, parameters);
     });

@@ -5,6 +5,7 @@ namespace ArtinCMS\LCS\Controllers;
 use App\Article;
 use App\User;
 use ArtinCMS\LCS\Model\CommentItem;
+use ArtinCMS\LCS\Model\CommentItemValue;
 use ArtinCMS\LMM\Models\Morph;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -22,9 +23,14 @@ class CommentController extends Controller
     public function getdata(Request $request)
     {
         $model = $request->model;
+        $morph = Morph::where('dev_name',$model)->first() ;
+        if($morph)
+        {
+            $target_type = $morph->model_name ;
+        }
         $id = LCS_GetDecodeId($request->id);
         $pid_key = $request->pid_key;
-        $model = $model::find($id);
+        $model = $target_type::find($id);
         $data['name'] = 'main';
         $data['comment'] = 'main';
         $data['id'] = 0;
@@ -68,12 +74,20 @@ class CommentController extends Controller
             $data['data_array'] =[];
             $data['children']=[];
         }
+        if(config('laravel_comments_system.show_comment_item'))
+        {
+            $items =CommentItem::where('morphable_id',$morph->id)->get();
+        }
+        else
+        {
+            $items=[] ;
+        }
+        $data['items'] = $items ;
         return json_encode($data);
     }
 
     public function saveComment(Request $request)
     {
-        //dd($request->all(),LFM_GetDecodeId($request->parent_id),LFM_GetDecodeId($request->target_id));
         if (LCS_getUserId() == 0 && config('laravel_comments_system.guestCanComments') == false)
         {
             $result['success'] = false;
@@ -93,10 +107,19 @@ class CommentController extends Controller
             }
             else
             {
+                $morph = Morph::where('dev_name',$request->target_type)->first() ;
+                if($morph)
+                {
+                    $model = $morph->model_name ;
+                }
+                else
+                {
+                    $model = $request->target_type;
+                }
                 $comment = new Comment;
                 $comment->user_id = LCS_getUserId();
                 $comment->target_id = LCS_GetDecodeId($request->target_id);
-                $comment->target_type = $request->target_type;
+                $comment->target_type = $model;
                 $comment->quote_id = LCS_GetDecodeId($request->quote_id);
                 if ($comment->user_id == 0)
                 {
@@ -109,6 +132,17 @@ class CommentController extends Controller
                 $comment->parent_id =  LCS_GetDecodeId($request->parent_id);
                 $comment->created_by = LCS_getUserId();
                 $comment->save();
+                foreach ($request->items as $key =>$value)
+                {
+                    if($value)
+                    {
+                        $res = new CommentItemValue ;
+                        $res->comment_id = $comment->id ;
+                        $res->comment_item_id = $key;
+                        $res->comment_item_value = $value ;
+                        $res->save();
+                    }
+                }
                 $result['success'] = true;
                 $result['message'] = __('lcs_fronted.tanks_message');
                 $result['autoPublish'] = config('laravel_comments_system.autoPublish');
@@ -126,7 +160,8 @@ class CommentController extends Controller
 
     public function indexCommentBackend()
     {
-        return view('laravel_comments_system::backend.index');
+        $morphs = Morph::select('id','name As text')->get();
+        return view('laravel_comments_system::backend.index',compact('morphs'));
     }
 
     public function getCommentDataTable()
@@ -176,7 +211,7 @@ class CommentController extends Controller
             $result['success'] = false;
             return json_encode($result);
         } else {
-            $id=LCS_GetDecodeId($request->id) ;
+            $id=LCS_GetDecodeId($request->encode_id) ;
             $comment = Comment::find($id);
             $comment->created_by =LCS_getUserId();
             $comment->name = $request->name;
@@ -222,7 +257,8 @@ class CommentController extends Controller
                 $comment->approved = 1 ;
             }
             $comment->save();
-            $result['message'][] = 'you commented successfully';
+            $result['message'] = 'پیغام شما با موفقیت ثبت گردید';
+            $result['title'] = 'ثبت نظر';
             $result['success'] = true;
             return json_encode($result);
         }
@@ -230,11 +266,35 @@ class CommentController extends Controller
 
     function trashComment(Request $request)
     {
-        $id = LCS_GetDecodeId($request->id);
-        Comment::destroy($id);
-        $result['message'][] = __('commentBackend.operation_is_success');
-        $result['success'] = true;
-        return json_encode($result);
+        $item = Comment::find(LFM_GetDecodeId($request->item_id));
+        if($item)
+        {
+            $item->delete();
+            $res =
+                [
+                    'success' => true,
+                    'title' => "حذف آیتم",
+                    'message' => 'آیتم با موفقیت حذف شد.'
+                ];
+
+        }
+        else
+        {
+            $res =
+                [
+                    'success' => false,
+                    'title' => "حذف آیتم",
+                    'message' => 'خطا در حذف آیتم'
+                ];
+        }
+
+
+
+        throw new HttpResponseException(
+            response()
+                ->json($res, 200)
+                ->withHeaders(['Content-Type' => 'text/plain', 'charset' => 'utf-8'])
+        );
     }
 
     function approveComment(Request $request)
@@ -374,6 +434,23 @@ class CommentController extends Controller
                 'message' => 'آیتم با موفقیت حذف شد.'
             ];
 
+        throw new HttpResponseException(
+            response()
+                ->json($res, 200)
+                ->withHeaders(['Content-Type' => 'text/plain', 'charset' => 'utf-8'])
+        );
+    }
+
+    public function getReplyToCommentForm(Request $request)
+    {
+        $comment = Comment::find(LCS_GetDecodeId($request->item_id)) ;
+        $comment->encode_id = LCS_getEncodeId($comment->id) ;
+        $reply_form = view('laravel_comments_system::backend.view.replyToComment', compact('comment'))->render();
+        $res =
+            [
+                'success' => true,
+                'reply_view' => $reply_form
+            ];
         throw new HttpResponseException(
             response()
                 ->json($res, 200)

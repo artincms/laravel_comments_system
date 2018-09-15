@@ -61,6 +61,7 @@
         </div>
         <div class="tab-pane" id="edit_setting"></div>
     </div>
+</div>
 @endsection
 @section('javascript')
     @include('laravel_comments_system::backend.helpers.setting_inline_js')
