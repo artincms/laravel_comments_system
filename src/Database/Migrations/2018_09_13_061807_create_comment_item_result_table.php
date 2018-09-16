@@ -19,6 +19,7 @@ class CreateCommentItemResultTable extends Migration
             $table->integer('comment_item_id')->unsigned()->nullable()->default(0);
             $table->string('comment_item_value')->nullable()->default(null);
             $table->enum('is_active', array('0','1'))->nullable()->default('1');
+            $table->integer('created_by')->unsigned()->nullable()->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -38,11 +38,11 @@
                 <div class="clearfixed"></div>
                 <div class="comment_btn_area" v-if="canComment">
                     <button @click="showForm" :data-item_id='model.id' :data-target_id="model.target_id" :data-target_type="model.target_type" :data-parent_id='model.encode_parent_id' class="lgs_btn lgs_btn-default btn-sm btn_reply_comment" type="button">
-                        <i class="fa fa-reply"></i>
+                        <i class="lcs-icon fa-lcs-reply"></i>
                         <span>{{t('reply')}}</span>
                     </button>
                     <button v-scroll-to="'#mainForm'" @click="setQuote" :data-id="model.encode_id"  ref="quoteButton"   class="lgs_btn lgs_btn-default btn-sm btn_quote_comment" type="button">
-                        <i class="fas fa-quote-right" style="font-size: 12px;"></i>
+                        <i class="lcs-icon fa-lcs-quote-right" style="font-size: 12px;"></i>
                         <span>{{t('quote')}}</span>
                     </button>
                 </div>
@@ -53,7 +53,7 @@
         <div  v-if="openForm && canComment" id="show_comment_form'" class="form_comment_reply" >
             <div class="row" style="margin: 0">
                 <button type="button" class="close close_open_reply"  @click="showForm">×</button></div>
-            <commentForm v-if="canComment" class="commentForm" :model="model"></commentForm>
+            <commentForm v-if="canComment" class="commentForm" :model="model" items="" :show_items=false></commentForm>
             <div id="formScroll"></div>
         </div>
         <div class="clearfixed"></div>

@@ -339,7 +339,7 @@ textarea#comment_text {
 }
 div#mainForm {
   margin-top: 1%;
-  background-color: #e8e8e8;
+  background-color: #f9f9f9;
   padding: 1%;
 }
 .commenter_avatar {
@@ -469,6 +469,136 @@ input, button, select, optgroup, textarea {
   padding-right: 15px;
 
 }
+input[type=range] {
+    -webkit-appearance: none;
+    margin: 10px 0;
+    width: 50%;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 50%;
+    height: 12.8px;
+    cursor: pointer;
+    animate: 0.2s;
+    box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+    background: #ac51b5;
+    border-radius: 25px;
+    border: 0px solid #000101;
+}
+input[type=range]::-webkit-slider-thumb {
+    box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+    border: 0px solid #000000;
+    height: 20px;
+    width: 39px;
+    border-radius: 7px;
+    background: #65001c;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -3.6px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ac51b5;
+}
+input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 12.8px;
+    cursor: pointer;
+    animate: 0.2s;
+    box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+    background: #ac51b5;
+    border-radius: 25px;
+    border: 0px solid #000101;
+}
+input[type=range]::-moz-range-thumb {
+    box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+    border: 0px solid #000000;
+    height: 20px;
+    width: 39px;
+    border-radius: 7px;
+    background: #65001c;
+    cursor: pointer;
+}
+input[type=range]::-ms-track {
+    width: 50%;
+    height: 12.8px;
+    cursor: pointer;
+    animate: 0.2s;
+    background: transparent;
+    border-color: transparent;
+    border-width: 39px 0;
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #ac51b5;
+    border: 0px solid #000101;
+    border-radius: 50px;
+    box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-fill-upper {
+    background: #ac51b5;
+    border: 0px solid #000101;
+    border-radius: 50px;
+    box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-thumb {
+    box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+    border: 0px solid #000000;
+    height: 20px;
+    width: 39px;
+    border-radius: 7px;
+    background: #65001c;
+    cursor: pointer;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #ac51b5;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #ac51b5;
+}
+
+.review_slide_group {
+    position: relative;
+    text-align: right;
+}
+.review_slide_item {
+    position: relative;
+    text-align: right;
+    font-size: 12px;
+    color: gray;
+    min-height:40px ;
+    border-bottom: 1px solid gray;
+}
+.review_tab_points .review_slide_percent {
+    margin-right: 20px;
+}
+.review_slide_percent {
+    position: absolute;
+    text-align: right;
+    padding-right: 91px;
+    top: 34px;
+    left: 0px;
+    z-index: 100;
+}
+.review_slide_percent_item {
+    position: relative;
+    display: inline-block;
+    text-align: left;
+    width: 45px;
+}
+input[name="item"] {
+    display: none;
+}
+.review_slide_percent_item i {
+    background: #efefef;
+    font-size: 16px;
+}
+label.radio_change {
+    position: absolute;
+    top: -20px;
+    left: 4px;
+}
 .lgs_col-sm-6{
   width: 50%;
 }
@@ -492,6 +622,37 @@ span.lgs_input-group-addon.comment_leave_message {
 }
 textarea#comment_text {
   width: 95%;
+}
+.lgs_float_left{
+  float:right
+}
+.lgs_float_right{
+  float:left
+}
+
+.lgs_text_left{
+    text-align: right;
+}
+.lgs_text_right{
+    text-align: left;
+}
+.span_bar {
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    color: #000;
+    font-weight: bolder;
+}
+.show_left_result * {
+    font-size: 16px!important;
+}
+.show_span_item_result {
+    position: absolute;
+    left: 50%;
+    top: 25px;
+    font-size: 12px!important;
+    color: #000;
+    font-weight: bolder;
 }
 .ltr .margin_right_20 {
   margin-left: 20px;
@@ -522,5 +683,33 @@ textarea#comment_text {
   margin-left: 70px;
   margin-right:0px;
 }
+.ltr .lgs_float_left{
+  float:left
+}
+.ltr .lgs_float_right{
+  float:right
+}
 
-
+.ltr .lgs_text_left{
+    text-align: left;
+}
+.ltr .lgs_text_right{
+    text-align: right;
+}
+.rtl {direction: rtl}
+.ltr {direction: ltr}
+.ltr .review_slide_percent {
+    left: inherit;
+    right: 0px;
+}
+.ltr .review_slide_percent {
+    padding-left: 90px;
+    padding-right: inherit;
+}
+.ltr .review_slide_percent_item{
+    text-align: right;
+}
+.ltr label.radio_change {
+    right: 4px;
+    left: inherit;
+}

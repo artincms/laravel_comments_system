@@ -14,5 +14,9 @@ class CommentItem extends Model
     {
         return $this->belongsTo(config('laravel_comments_system.userModel'), 'user_id');
     }
+    public function commentValues()
+    {
+        return $this->hasMany('ArtinCMS\LCS\Model\CommentItemValue','comment_item_id','id');
+    }
 
 }

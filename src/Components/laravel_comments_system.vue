@@ -1,7 +1,22 @@
 <template>
-    <div class="show_comment" :class="direction">
+    <div class="show_comment" :class="dClass" style="width: 99%;">
         <ul class="formComments" id="item_comment">
             <button type="button" class="lgs_btn lgs_btn-primary lgs_btn-block col-md-12" @click="closeQuote" v-scroll-to="'#mainForm'">{{ t('leave_new_comment') }}</button>
+            <div id="showResult" style="padding: 50px;" v-if="results.length>0">
+                <div class="lgs_col-sm-6 lgs_float_left lgs_text_left">
+                    <label><strong>{{t('avarage_present_item')}}</strong></label>
+                    <div style="position: relative">
+                        <label>{{t('for_base')}}<strong> {{this.count}} </strong> {{t('voted')}}</label>
+                        <progress-bar size="huge" :val="all_avg" max="100" bar-color="rgb(121, 218, 249)" text-position="middle"></progress-bar><span class="span_bar">{{this.all_avg}}%</span>
+                    </div>
+                </div>
+                <div class="lgs_col-sm-6 lgs_float_right show_left_result" style="border-right: 3px solid #eeeeee;">
+                    <div v-for="res in results" :key="res.id" style="margin: 20px;position: relative">
+                        <progress-bar size="big" :val="res.avg" max="100" :text="res.title" bar-color="#17a2b8" text-position="top"></progress-bar><span class="show_span_item_result">{{res.avg}}%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
             <Item
                     class="item"
                     :model="treeData">
@@ -22,7 +37,7 @@
                     </div>
                     <hr />
                 </div>
-                <commentForm :model="treeData"></commentForm>
+                <commentForm :model="treeData" :items="items" :show_items=true></commentForm>
             </div>
         </ul>
     </div>
@@ -31,6 +46,7 @@
     import Item from './components/item.vue';
     import commentForm from './components/commentForm.vue';
     import Vuex from "vuex";
+    import ProgressBar from 'vue-simple-progress'
     window.axios = require('axios');
     import VueTranslate from 'vue-translate-plugin'
     Vue.use(VueTranslate);
@@ -56,7 +72,8 @@
             data_array:[],
             model:[],
             num_child :0,
-            rtl : true
+            rtl : true,
+            items:[]
         },
     });
     export default  {
@@ -65,8 +82,24 @@
         data: function () {
             return {
                 treeData: [],
-                rtl:true
+                rtl:true,
+                items:[],
+                results:false,
+                all_avg : false,
+                count:0
             }
+        },
+        computed: {
+            dClass:function () {
+                if(this.direction)
+                {
+                    return 'rtl' ;
+                }
+                else
+                {
+                    return 'ltr' ;
+                }
+            },
         },
         store: store,
         mounted() {
@@ -77,6 +110,10 @@
                 axios.post("/LCS/getData", {model: this.target_model_name, id: this.target_id, pid_key: this.target_parent_column_name}).then((response) => {
                     this.treeData = response.data;
                     this.$store.state.user_id = response.data.user_id ;
+                    this.items = response.data.items ;
+                    this.count = response.data.count ;
+                    this.results = response.data.result ;
+                    this.all_avg = response.data.all_avg ;
                     this.$store.state.canComment = response.data.canComment ;
                     this.$store.state.data_array = response.data.data_array ;
                     this.$store.state.data = response.data ;
@@ -98,7 +135,7 @@
             },
         },
         components: {
-            Item,commentForm
+            Item,commentForm,ProgressBar
         },
         locales: {
             en:  require('./lang/en/comment.json'),
@@ -113,7 +150,10 @@
                 "name_place_holder": "نام ..",
                 "email_place_holder": "ایمیل ..",
                 "write_your_message_here": "پیام خود را بنویسید ...",
-                "tanks_message" : "پیغام شما با موفقیت ثبت گردید"
+                "tanks_message" : "پیغام شما با موفقیت ثبت گردید",
+                "avarage_present_item" : "میانگین رضایت مندی کاربران",
+                "for_base" :"بر اساس",
+                "voted" : 'رای داده شده'
             }
         }
     }
@@ -121,6 +161,7 @@
 </script>
 
 <style scoped>
+    @import  './lib/icon/style.css';
     @import  './assets/css/comment.css';
     .wrapper {
         height:150px;

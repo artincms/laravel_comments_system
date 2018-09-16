@@ -8,5 +8,8 @@
   "you_commented_successfully": "you commented successfully ",
   "name_place_holder": "Name ..",
   "email_place_holder": "Email ..",
-  "write_your_message_here": "wtite your message here..."
+  "avarage_present_item" : "Avarage Present For This Item",
+  "write_your_message_here": "wtite your message here...",
+  "for_base ": "For Base",
+  "voted" : "Voted"
 }

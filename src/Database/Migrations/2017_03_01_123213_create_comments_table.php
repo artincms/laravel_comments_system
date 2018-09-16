@@ -25,7 +25,7 @@ class CreateCommentsTable extends Migration
             $table->integer('parent_id')->unsigned()->default(0);
             $table->enum('seen_by_admin', array('1','0'))->nullable()->default('0');
             $table->integer('quote_id')->unsigned()->default(0);
-            $table->integer('created_by')->unsigned()->default(0);
+            $table->integer('created_by')->unsigned()->nullable()->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

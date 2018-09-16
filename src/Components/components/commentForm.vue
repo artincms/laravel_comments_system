@@ -12,6 +12,13 @@
             <input class="section_id" type="hidden" name="target_id" :value="model.encode_target_id">
             <input class="section_type" type="hidden" name="target_type" :value="model.target_type">
             <input class="comment_type" type="hidden" name="comment_type" value="comment_reply">
+            <div v-if="items.length > 0">
+                <label class="auto_label customers_review_slide_label">امتیاز
+                    شما به این آیتم :</label>
+                <div style="background: #efefef;padding: 34px;">
+                    <rating_item v-for="item in items" :key="item.id" :item="item"></rating_item>
+                </div>
+            </div>
             <div class="row" v-if=" this.$store.state.user_id == 0 " style="padding:10px">
                 <div class="lgs_col-sm-6 lgs_float_right">
                     <div class="lgs_input-group input-group-sm chatMessageControls">
@@ -50,9 +57,10 @@
 </template>
 
 <script>
+    import rating_item from './rating_item.vue';
     export default {
         name: "commentForm",
-        props: ['model'],
+        props: ['model','items'],
         data: function () {
             return {
                 errors: [],
@@ -63,6 +71,7 @@
                 section_id:'',
                 section_type:'',
                 comment : '',
+                data: [],
             }
         },
         computed : {
@@ -85,7 +94,8 @@
                         parent_id:this.model.encode_id,
                         target_id:this.model.encode_target_id,
                         target_type:this.model.target_type,
-                        quote_id: this.$store.state.quote_id
+                        quote_id: this.$store.state.quote_id,
+                        items: this.$store.state.items,
                     }).then((response) => {
                     if(response.data.success)
                     {
@@ -120,8 +130,15 @@
             },
             clearForm : function (e) {
                 this.name = this.email =this.comment= '';
+            },
+            setData:function()
+            {
+
             }
 
+        },
+        components: {
+            rating_item
         },
     }
 </script>

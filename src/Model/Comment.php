@@ -35,4 +35,10 @@ class Comment extends Model
             return '' ;
         }
     }
+
+    public function commentValues()
+    {
+        return $this->hasMany('ArtinCMS\LCS\Model\CommentItemValue','comment_id','id');
+    }
+
 }

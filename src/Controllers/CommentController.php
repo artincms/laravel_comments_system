@@ -76,13 +76,47 @@ class CommentController extends Controller
         }
         if(config('laravel_comments_system.show_comment_item'))
         {
-            $items =CommentItem::where('morphable_id',$morph->id)->get();
+            $items =CommentItem::with('commentValues')->where('morphable_id',$morph->id)->get();
+            $result = [] ;
+            $all_perc = 0 ;
+            $count = 0 ;
+            foreach ($items as $item)
+            {
+
+                $avg = 0;
+                $i = 0 ;
+                if (isset($item->commentValues))
+                {
+                    foreach ($item->commentValues as $value)
+                    {
+                        $avg +=$value->comment_item_value ;
+                        $i++;
+                        $count++;
+                    }
+                    $res = ['id' =>$item->id,'title' =>$item->title] ;
+                    $perc = ($avg/$i)*20;
+                    $all_perc += $perc ;
+                    $res['avg'] = $perc ;
+                    $result[] = $res ;
+                }
+            }
         }
         else
         {
             $items=[] ;
+            $result = [] ;
+        }
+        if($all_perc !=0)
+        {
+            $data['all_avg'] = $all_perc/count($result) ;
+        }
+        else
+        {
+            $data['all_avg'] = false ;
         }
         $data['items'] = $items ;
+        $data['count'] = $count ;
+        $data['result'] = $result ;
         return json_encode($data);
     }
 
@@ -140,6 +174,16 @@ class CommentController extends Controller
                         $res->comment_id = $comment->id ;
                         $res->comment_item_id = $key;
                         $res->comment_item_value = $value ;
+                        if (auth()->check())
+                        {
+                            $auth = auth()->id();
+                        }
+                        else
+                        {
+                            $auth = 0;
+
+                        }
+                        $res->created_by =$auth;
                         $res->save();
                     }
                 }
