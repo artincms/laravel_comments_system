@@ -77,6 +77,7 @@
             quote_id:0,
             canComment:true,
             user_can_comment:false,
+            user_comment:false,
             data_array:[],
             model:[],
             num_child :0,
@@ -125,6 +126,7 @@
                     this.results = response.data.result ;
                     this.all_avg = response.data.all_avg ;
                     this.$store.state.user_can_comment = response.data.user_can_comment ;
+                    this.$store.state.user_comment = response.data.user_comment ;
                     this.$store.state.canComment = response.data.canComment ;
                     this.$store.state.data_array = response.data.data_array ;
                     this.$store.state.data = response.data ;

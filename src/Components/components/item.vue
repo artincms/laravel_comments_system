@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="clearfixed"></div>
-                <div class="comment_btn_area" v-if="canComment && this.$store.state.user_can_comment">
+                <div class="comment_btn_area" v-if="user_can_comment(model.encode_id)">
                     <button @click="showForm" :data-item_id='model.id' :data-target_id="model.target_id" :data-target_type="model.target_type" :data-parent_id='model.encode_parent_id' class="lgs_btn lgs_btn-default btn-sm btn_reply_comment" type="button">
                         <i class="lcs-icon fa-lcs-reply"></i>
                         <span>{{t('reply')}}</span>
@@ -108,6 +108,9 @@
                 }
                 return false ;
             },
+            user_comment:function () {
+                return this.$store.state.user_comment ;
+            }
         },
         methods: {
             setQuote: function (e) {
@@ -136,6 +139,30 @@
                     this.openForm = !this.openForm
                 }
             },
+            user_can_comment :function (id) {
+               if(!this.$store.state.user_can_comment)
+               {
+                   if(this.user_comment.length > 0 && this.canComment)
+                   {
+                       if (this.user_comment.indexOf(id) ==-1)
+                       {
+                           return true ;
+                       }
+                       else
+                       {
+                           return false ;
+                       }
+                   }
+                   else
+                   {
+                       return false ;
+                   }
+               }
+               else
+               {
+                   return true ;
+               }
+            }
         },
         components: {
             Item,commentForm,

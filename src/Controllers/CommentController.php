@@ -133,23 +133,32 @@ class CommentController extends Controller
                 $auth = 0;
 
             }
-            $user_can_comment = Comment::where([
+            $user_can_comment= Comment::where([
                 ['target_id',LCS_GetDecodeId($request->id)],
                 ['target_type',$target_type],
                 ['user_id',$auth]
-            ])->first();
-            if($user_can_comment)
+            ])->get();
+            if(count($user_can_comment) > 0)
             {
+                $array = [] ;
+                foreach ($user_can_comment as $user_comment)
+                {
+                    $array[] = LCS_getEncodeId($user_comment->parent_id);
+                    $array[] = LCS_getEncodeId($user_comment->id);
+                }
+                $data['user_comment'] =$array ;
                 $data['user_can_comment'] = false ;
             }
             else
             {
+                $data['user_comment'] =false ;
                 $data['user_can_comment'] = true ;
             }
         }
         else
         {
             $data['user_can_comment'] = false ;
+            $data['user_comment'] =false ;
         }
         return json_encode($data);
     }
