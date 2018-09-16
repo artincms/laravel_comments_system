@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="clearfixed"></div>
-                <div class="comment_btn_area" v-if="canComment">
+                <div class="comment_btn_area" v-if="canComment && this.$store.state.user_can_comment">
                     <button @click="showForm" :data-item_id='model.id' :data-target_id="model.target_id" :data-target_type="model.target_type" :data-parent_id='model.encode_parent_id' class="lgs_btn lgs_btn-default btn-sm btn_reply_comment" type="button">
                         <i class="lcs-icon fa-lcs-reply"></i>
                         <span>{{t('reply')}}</span>

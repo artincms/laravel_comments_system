@@ -11,5 +11,8 @@
   "avarage_present_item" : "Avarage Present For This Item",
   "write_your_message_here": "wtite your message here...",
   "for_base ": "For Base",
-  "voted" : "Voted"
+  "voted" : "Voted",
+  "you_can_vote" : "You can vote this item",
+  "you_should_login_first" : "For vote to this item you should login first",
+  "login_to_profile":"login to your profile"
 }

@@ -1,7 +1,14 @@
 <template>
     <div class="show_comment" :class="dClass" style="width: 99%;">
         <ul class="formComments" id="item_comment">
-            <button type="button" class="lgs_btn lgs_btn-primary lgs_btn-block col-md-12" @click="closeQuote" v-scroll-to="'#mainForm'">{{ t('leave_new_comment') }}</button>
+            <button v-if="this.$store.state.canComment && this.$store.state.user_can_comment" type="button" class="lgs_btn lgs_btn-primary lgs_btn-block col-md-12 pointer" @click="closeQuote" v-scroll-to="'#mainForm'">{{ t('leave_new_comment') }}</button>
+            <div v-if="!this.$store.state.canComment" style="position: relative">
+                <div style="text-align: center">
+                    <label>{{t('you_can_vote')}}</label>
+                    <p>{{t('you_should_login_first')}}</p>
+                    <a :href="loginUrl" target="_blank" class="lgs_btn lgs_btn-primary">{{t('login_to_profile')}}</a>
+                </div>
+            </div>
             <div id="showResult" style="padding: 50px;" v-if="results.length>0">
                 <div class="lgs_col-sm-6 lgs_float_left lgs_text_left">
                     <label><strong>{{t('avarage_present_item')}}</strong></label>
@@ -12,7 +19,7 @@
                 </div>
                 <div class="lgs_col-sm-6 lgs_float_right show_left_result" style="border-right: 3px solid #eeeeee;">
                     <div v-for="res in results" :key="res.id" style="margin: 20px;position: relative">
-                        <progress-bar size="big" :val="res.avg" max="100" :text="res.title" bar-color="#17a2b8" text-position="top"></progress-bar><span class="show_span_item_result">{{res.avg}}%</span>
+                        <progress-bar size="big" :val="res.avg" max="100" :text="res.title" bar-color="rgb(121, 218, 249)" text-position="top"></progress-bar><span class="show_span_item_result">{{res.avg}}%</span>
                     </div>
                 </div>
             </div>
@@ -21,7 +28,7 @@
                     class="item"
                     :model="treeData">
             </Item>
-            <div  id="mainForm" v-if="this.$store.state.canComment ">
+            <div  id="mainForm" v-if="this.$store.state.canComment && this.$store.state.user_can_comment">
                 <div v-if="this.$store.state.quote_id != 0"  >
                     <div class="main_quote comment_content">
                         <button type="button" class="close close_open_reply" style="position: absolute;right: 7px;z-index: 10;" @click="closeQuote">×</button>
@@ -68,7 +75,8 @@
         state: {
             user_id:0,
             quote_id:0,
-            canComment:false,
+            canComment:true,
+            user_can_comment:false,
             data_array:[],
             model:[],
             num_child :0,
@@ -86,7 +94,8 @@
                 items:[],
                 results:false,
                 all_avg : false,
-                count:0
+                count:0,
+                loginUrl:false,
             }
         },
         computed: {
@@ -111,9 +120,11 @@
                     this.treeData = response.data;
                     this.$store.state.user_id = response.data.user_id ;
                     this.items = response.data.items ;
+                    this.loginUrl = response.data.loginUrl ;
                     this.count = response.data.count ;
                     this.results = response.data.result ;
                     this.all_avg = response.data.all_avg ;
+                    this.$store.state.user_can_comment = response.data.user_can_comment ;
                     this.$store.state.canComment = response.data.canComment ;
                     this.$store.state.data_array = response.data.data_array ;
                     this.$store.state.data = response.data ;
@@ -153,7 +164,10 @@
                 "tanks_message" : "پیغام شما با موفقیت ثبت گردید",
                 "avarage_present_item" : "میانگین رضایت مندی کاربران",
                 "for_base" :"بر اساس",
-                "voted" : 'رای داده شده'
+                "voted" : 'رای داده شده',
+                "you_can_vote" : "شما هم می‌توانید در مورد این کالا نظر بدهید.",
+                "you_should_login_first" : "برای ثبت نظر، لازم است ابتدا وارد حساب کاربری خود شوید.",
+                "login_to_profile":"ورود به حساب کاربری"
             }
         }
     }

@@ -28,6 +28,10 @@ class CommentController extends Controller
         {
             $target_type = $morph->model_name ;
         }
+        else
+        {
+            $target_type = $model ;
+        }
         $id = LCS_GetDecodeId($request->id);
         $pid_key = $request->pid_key;
         $model = $target_type::find($id);
@@ -115,8 +119,38 @@ class CommentController extends Controller
             $data['all_avg'] = false ;
         }
         $data['items'] = $items ;
+        $data['loginUrl'] = config('laravel_comments_system.loginUrl') ;
         $data['count'] = $count ;
         $data['result'] = $result ;
+        if( $data['canComment'])
+        {
+            if (auth()->check())
+            {
+                $auth = auth()->id();
+            }
+            else
+            {
+                $auth = 0;
+
+            }
+            $user_can_comment = Comment::where([
+                ['target_id',LCS_GetDecodeId($request->id)],
+                ['target_type',$target_type],
+                ['user_id',$auth]
+            ])->first();
+            if($user_can_comment)
+            {
+                $data['user_can_comment'] = false ;
+            }
+            else
+            {
+                $data['user_can_comment'] = true ;
+            }
+        }
+        else
+        {
+            $data['user_can_comment'] = false ;
+        }
         return json_encode($data);
     }
 
