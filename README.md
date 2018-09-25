@@ -28,6 +28,12 @@ if update package for publish vendor you should run :
     $ php artisan migrate
 </pre> </div>
 
+<h3>publish seed</h3>
+```apple js
+ php artisan db:seed --class="ArtinCMS\LCS\Database\Seeds\LmmMorphableTableSeeder"
+
+```
+
  <h1>usage</h1> 
  for use this package you should use bellow helper function anywhere in your project such as in your controller . 
     this helper function is :

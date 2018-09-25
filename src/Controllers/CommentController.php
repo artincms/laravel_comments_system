@@ -56,21 +56,29 @@ class CommentController extends Controller
         {
             $data['canComment'] = true;
         }
-        $comments = $model->comments ;
-        if($comments)
+        if ($model)
         {
-            foreach ($comments->toArray() as $value)
+            if(isset($model->comments))
             {
-                $data['data_array'][$value['encode_id']] = $value;
-            }
-            if (config('laravel_comments_system.autoPublish'))
-            {
-                $data['children'] = LCS_BuildTree($comments->toArray(), $pid_key, false, false, LCS_getEncodeId(0),'encode_id');
+                $comments = $model->comments ;
+                foreach ($comments->toArray() as $value)
+                {
+                    $data['data_array'][$value['encode_id']] = $value;
+                }
+                if (config('laravel_comments_system.autoPublish'))
+                {
+                    $data['children'] = LCS_BuildTree($comments->toArray(), $pid_key, false, false, LCS_getEncodeId(0),'encode_id');
+                }
+                else
+                {
+                    $data['children'] = LCS_BuildTree($comments>where('approved', '=', 1)->toArray(), $pid_key, false, false, 0,'encode_id');
+
+                }
             }
             else
             {
-                $data['children'] = LCS_BuildTree($comments>where('approved', '=', 1)->toArray(), $pid_key, false, false, 0,'encode_id');
-
+                $data['data_array'] =[];
+                $data['children']=[];
             }
         }
         else
@@ -78,6 +86,7 @@ class CommentController extends Controller
             $data['data_array'] =[];
             $data['children']=[];
         }
+
         if(config('laravel_comments_system.show_comment_item'))
         {
             $items =CommentItem::with('commentValues')->where('morphable_id',$morph->id)->get();
