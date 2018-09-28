@@ -98,7 +98,7 @@ class CommentController extends Controller
 
                 $avg = 0;
                 $i = 0 ;
-                if (isset($item->commentValues) && $item->commentValues->count()>0)
+                if (count($item->commentValues))
                 {
                     foreach ($item->commentValues as $value)
                     {
