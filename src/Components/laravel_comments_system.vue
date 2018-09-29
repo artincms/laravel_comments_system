@@ -6,7 +6,7 @@
                 <div style="text-align: center">
                     <label>{{t('you_can_vote')}}</label>
                     <p>{{t('you_should_login_first')}}</p>
-                    <a :href="loginUrl" target="_blank" class="lgs_btn lgs_btn-primary">{{t('login_to_profile')}}</a>
+                    <a :href="login_url" target="_blank" class="lgs_btn lgs_btn-primary">{{t('login_to_profile')}}</a>
                 </div>
             </div>
             <div id="showResult" style="padding: 50px;" v-if="results.length>0">
@@ -87,7 +87,7 @@
     });
     export default  {
         name: 'laravel_comments_system',
-        props: ['target_model_name', 'target_id', 'target_parent_column_name','direction'],
+        props: ['target_model_name', 'target_id', 'target_parent_column_name','direction_rtl','jalali_data'],
         data: function () {
             return {
                 treeData: [],
@@ -96,12 +96,12 @@
                 results:false,
                 all_avg : false,
                 count:0,
-                loginUrl:false,
+                login_url:false,
             }
         },
         computed: {
             dClass:function () {
-                if(this.direction)
+                if(this.direction_rtl)
                 {
                     return 'rtl' ;
                 }
@@ -117,11 +117,11 @@
         },
         methods: {
             getData : function () {
-                axios.post("/LCS/getData", {model: this.target_model_name, id: this.target_id, pid_key: this.target_parent_column_name}).then((response) => {
+                axios.post("/LCS/getData", {model: this.target_model_name, id: this.target_id, pid_key: this.target_parent_column_name,jalali_data:this.jalali_data}).then((response) => {
                     this.treeData = response.data;
                     this.$store.state.user_id = response.data.user_id ;
                     this.items = response.data.items ;
-                    this.loginUrl = response.data.loginUrl ;
+                    this.login_url = response.data.login_url ;
                     this.count = response.data.count ;
                     this.results = response.data.result ;
                     this.all_avg = response.data.all_avg ;
