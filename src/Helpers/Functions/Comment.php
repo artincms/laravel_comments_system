@@ -1,11 +1,15 @@
 <?php
 
-function LCS_BuildTree($flat_array, $pidKey, $openNodes = true, $selectedNode = false, $parent = 0, $idKey = 'id', $children_key = 'children')
+function LCS_BuildTree($flat_array, $pidKey, $openNodes = true, $selectedNode = false, $parent = 0, $idKey = 'id', $children_key = 'children',$jalali_date=true)
 {
     $grouped = array();
     foreach ($flat_array as $sub)
     {
         $sub['name'] = LCS_getUserData($sub)['name'];
+        if($jalali_date)
+        {
+            $sub['created_at'] =   $date = LCS_Date_GtoJ($sub['created_at'],'Y-m-d');;
+        }
         $sub['text'] = $sub['name'];
         if ((int)$sub['encode_id'] == (int)$selectedNode)
         {
@@ -62,7 +66,7 @@ function LCS_getUserId()
 function LCS_getUserData($comment)
 {
     $user_id=$comment['user_id'];
-    $user = config('laravel_comments_system.userModel')::find($user_id);
+    $user = config('laravel_comments_system.user_model')::find($user_id);
     if ($user)
     {
         $user['name'] = $user->name;
@@ -151,4 +155,45 @@ function LCS_GetDecodeId($id, $route = false)
             }
         }
     }
+}
+
+function LCS_GetUserInformation($user_id)
+{
+    $user = \Illuminate\Foundation\Auth\User::find($user_id);
+    return [
+        'name' => $user->name,
+        'email' => $user->email,
+    ] ;
+}
+
+function LCS_Date_GtoJ($GDate = null, $Format = "Y/m/d-H:i", $convert = true)
+{
+    if ($GDate == '-0001-11-30 00:00:00' || $GDate == null)
+    {
+        return '--/--/----';
+    }
+    $date = new ArtinCMS\LCS\Helpers\Classes\jDateTime($convert, true, 'Asia/Tehran');
+    $time = is_numeric($GDate) ? strtotime(date('Y-m-d H:i:s', $GDate)) : strtotime($GDate);
+
+    return $date->date($Format, $time);
+
+}
+function LCS_Date_JtoG($jDate, $delimiter = '/', $to_string = false, $with_time = false, $input_format = 'Y/m/d H:i:s')
+{
+    $jDate = ConvertNumbersFatoEn($jDate);
+    $parseDateTime = ArtinCMS\LCS\Helpers\Classes\jDateTime::parseFromFormat($input_format, $jDate);
+    $r = ArtinCMS\LCS\Helpers\Classes\jDateTime::toGregorian($parseDateTime['year'], $parseDateTime['month'], $parseDateTime['day']);
+    if ($to_string)
+    {
+        if ($with_time)
+        {
+            $r = $r[0] . $delimiter . $r[1] . $delimiter . $r[2] . ' ' . $parseDateTime['hour'] . ':' . $parseDateTime['minute'] . ':' . $parseDateTime['second'];
+        }
+        else
+        {
+            $r = $r[0] . $delimiter . $r[1] . $delimiter . $r[2];
+        }
+    }
+
+    return ($r);
 }

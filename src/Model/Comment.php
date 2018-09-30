@@ -11,9 +11,13 @@ class Comment extends Model
     use SoftDeletes;
     public function user()
     {
-        return $this->belongsTo(config('laravel_comments_system.userModel'), 'user_id');
+        return $this->belongsTo(config('laravel_comments_system.user_model'), 'user_id');
     }
-
+    public function getMorphNameAttribute()
+    {
+        $target = Morph::where('model_name',$this->target_type)->first();
+        return $target->name ;
+    }
     public function getTitleAttribute()
     {
         $target = Morph::where('model_name',$this->target_type)->first();
@@ -40,5 +44,4 @@ class Comment extends Model
     {
         return $this->hasMany('ArtinCMS\LCS\Model\CommentItemValue','comment_id','id');
     }
-
 }
