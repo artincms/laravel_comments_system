@@ -87,7 +87,7 @@
     });
     export default  {
         name: 'laravel_comments_system',
-        props: ['target_model_name', 'target_id', 'target_parent_column_name','direction'],
+        props: ['target_model_name', 'target_id', 'target_parent_column_name','direction_rtl','jalali_data'],
         data: function () {
             return {
                 treeData: [],
@@ -101,7 +101,7 @@
         },
         computed: {
             dClass:function () {
-                if(this.direction)
+                if(this.direction_rtl)
                 {
                     return 'rtl' ;
                 }
@@ -117,7 +117,7 @@
         },
         methods: {
             getData : function () {
-                axios.post("/LCS/getData", {model: this.target_model_name, id: this.target_id, pid_key: this.target_parent_column_name}).then((response) => {
+                axios.post("/LCS/getData", {model: this.target_model_name, id: this.target_id, pid_key: this.target_parent_column_name,jalali_data:this.jalali_data}).then((response) => {
                     this.treeData = response.data;
                     this.$store.state.user_id = response.data.user_id ;
                     this.items = response.data.items ;

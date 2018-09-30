@@ -640,6 +640,7 @@ textarea#comment_text {
     top: 55%;
     color: #000;
     font-weight: bolder;
+    line-height: 20px;
 }
 .show_left_result * {
     font-size: 16px!important;
@@ -651,6 +652,7 @@ textarea#comment_text {
     font-size: 12px!important;
     color: #000;
     font-weight: bolder;
+    line-height: 20px;
 }
 .ltr .margin_right_20 {
   margin-left: 20px;
