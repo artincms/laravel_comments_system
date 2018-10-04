@@ -3,8 +3,8 @@
 return [
 
     /* Important Settings */
-    'backend_lcs_middlewares'  => env('BACKEND_LCS_MIDDLEWARES', 'web'),
-    'frontend_lcs_middlewares' => env('FRONTEND_LCS_MIDDLEWARES', 'web'),
+    'backend_lcs_middlewares'  => explode(',', env('BACKEND_LCS_MIDDLEWARES', 'web')),
+    'frontend_lcs_middlewares' => explode(',', env('FRONTEND_LCS_MIDDLEWARES', 'web')),
     // you can change default route from sms-admin to anything you want
     'backend_lcs_route_prefix' => env('BACKEND_LCS_ROUTE_PERFIX', 'LCS'),
     'frontend_lcs_route_prefix' => env('FRONTEND_LCS_ROUTE_PERFIX', 'LCS'),
