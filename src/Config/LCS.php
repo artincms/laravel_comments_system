@@ -16,7 +16,7 @@ return [
     'guestCanComments'          => false,
     'loginUrl'                  => 'http://127.0.0.1:8000/login',
     'registerUrl'               => 'http://127.0.0.1:8000/register',
-    'userModel'                 => 'App\User',
+    'user_model'                 => 'App\User',
     'show_comment_item'         => true,
     'Trait'                     => [
         'Path'   => 'App\Traits\LaravelCommentSystem',

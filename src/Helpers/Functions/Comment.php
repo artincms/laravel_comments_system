@@ -62,7 +62,7 @@ function LCS_getUserId()
 function LCS_getUserData($comment)
 {
     $user_id=$comment['user_id'];
-    $user = config('laravel_comments_system.userModel')::find($user_id);
+    $user = config('laravel_comments_system.user_model')::find($user_id);
     if ($user)
     {
         $user['name'] = $user->name;

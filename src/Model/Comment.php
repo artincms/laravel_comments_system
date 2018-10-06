@@ -11,7 +11,7 @@ class Comment extends Model
     use SoftDeletes;
     public function user()
     {
-        return $this->belongsTo(config('laravel_comments_system.userModel'), 'user_id');
+        return $this->belongsTo(config('laravel_comments_system.user_model'), 'user_id');
     }
 
     public function getTitleAttribute()
