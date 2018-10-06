@@ -81,17 +81,15 @@
             data_array:[],
             model:[],
             num_child :0,
-            rtl : true,
             items:[]
         },
     });
     export default  {
         name: 'laravel_comments_system',
-        props: ['target_model_name', 'target_id', 'target_parent_column_name','direction_rtl','jalali_data'],
+        props: ['target_model_name', 'target_id', 'target_parent_column_name','rtl','jalali_data'],
         data: function () {
             return {
                 treeData: [],
-                rtl:true,
                 items:[],
                 results:false,
                 all_avg : false,
@@ -101,7 +99,7 @@
         },
         computed: {
             dClass:function () {
-                if(this.direction_rtl)
+                if(this.rtl)
                 {
                     return 'rtl' ;
                 }
@@ -134,12 +132,10 @@
                     if (response.data.lang =='en')
                     {
                         this.$translate.setLang("en");
-                        this.$store.state.rtl=false ;
                     }
                     else
                     {
                         this.$translate.setLang("fa");
-                        this.$store.state.rtl=true ;
                     }
                 });
             },

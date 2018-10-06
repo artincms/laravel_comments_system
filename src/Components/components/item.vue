@@ -79,7 +79,6 @@
         data: function () {
             return {
                 openForm:false,
-                rtl : this.$store.state.rtl
             }
         },
         computed: {

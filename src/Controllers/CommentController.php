@@ -146,17 +146,25 @@ class CommentController extends Controller
                 ['target_id', LCS_GetDecodeId($request->id)],
                 ['target_type', $target_type],
                 ['user_id', $auth]
-            ])->get();
-            if (count($user_can_comment) > 0)
+            ]);
+            $user_can_comments=$user_can_comment->get() ;
+            if (count($user_can_comments) > 0)
             {
                 $array = [];
-                foreach ($user_can_comment as $user_comment)
+                foreach ($user_can_comments as $user_comment)
                 {
                     $array[] = LCS_getEncodeId($user_comment->parent_id);
                     $array[] = LCS_getEncodeId($user_comment->id);
                 }
                 $data['user_comment'] = $array;
-                $data['user_can_comment'] = false;
+                if(count($user_can_comment->where('parent_id',0)->get()) > 0)
+                {
+                    $data['user_can_comment'] = false;
+                }
+                else
+                {
+                    $data['user_can_comment'] = true;
+                }
             }
             else
             {

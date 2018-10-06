@@ -73,9 +73,9 @@ for use comment Template in your page (for example your article page) you shold 
  <div class="highlight highlight-text-html-php">
  
 ```
-<div id="lcs_comment">
-    <laravel_comment_system target_model_name="item_model" target_id="{{LCS_getEncodeId(1)}}" target_parent_column_name="encode_parent_id" :user-id="0" :show="true" :direction_rtl=true :jalali_data=true></laravel_comment_system>
-</div>
+ <div id="lcs_comment">
+        <laravel_comment_system target_model_name="item_model" target_id="{{LCS_getEncodeId(1)}}" target_parent_column_name="encode_parent_id"  :rtl=true :jalali_data=true></laravel_comment_system>
+    </div>
 
 ```
 </div>
