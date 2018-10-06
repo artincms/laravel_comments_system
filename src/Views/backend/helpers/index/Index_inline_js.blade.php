@@ -65,9 +65,14 @@
             }
         },
         {
+            data: "morph_name",
+            name: "morph_name",
+            title: 'عنوان مجموعه',
+        },
+        {
             data: "title",
             name: "title",
-            title: 'عنوان',
+            title: 'عنوان آیتم',
             // mRender: function (data, type, row) {
             //     html = '<a href="'+row.url+'">'+row.title+'</a>';
             //     return html ;

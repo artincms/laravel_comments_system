@@ -1,13 +1,14 @@
         <div class="space-20"></div>
         <form class="form-horizontal" id="replyToCommentForm">
             <input type="hidden" class="form-control" name="encode_id" value="{{$comment->encode_id}}">
+            <input type="hidden" class="form-control" name="user_id" value="{{$comment->user_id}}">
             <div class="form-group row fg_title">
                 <label class="col-sm-2 control-label col-form-label label_post" for="title">
                     <span class="more_info"></span>
                     <span class="label_title">نام :</span>
                 </label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" placeholder="نام ..." name="name" value="{{$comment->name}}">
+                    <input type="text" class="form-control" placeholder="نام ..." name="name" value="{{$comment->name}}" @if(!isset($comment->name)) disabled @endif>
                 </div>
                 <div class="col-sm-4 messages"></div>
             </div>
@@ -17,7 +18,7 @@
                     <span class="label_title"> ایمیل :</span>
                 </label>
                 <div class="col-sm-6">
-                    <input type="email" class="form-control" id="email" placeholder="ایمیل خود را وارد نمایید .." name="email" value="{{$comment->email}}">
+                    <input type="email" class="form-control" id="email" placeholder="ایمیل خود را وارد نمایید .." name="email" value="{{$comment->email}}" @if(!isset($comment->email)) disabled @endif>
                 </div>
                 <div class="col-sm-4 messages"></div>
             </div>
@@ -64,7 +65,11 @@
     <script>
         var create_comment_reply_constraints = {
             name: {
-                presence: {message: '^<strong>نام ضروی است.</strong>'}
+                require_if: {
+                    other_attribute_name: "user_id",
+                    other_attribute_value: 0,
+                    message: '^<strong>.انتخاب نام الزامی است</strong>'
+                }
             },
         };
         var reply_to_comment_form_id = document.querySelector("#replyToCommentForm");
