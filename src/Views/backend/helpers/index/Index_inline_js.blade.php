@@ -79,14 +79,14 @@
             // }
         },
         {
-            data:'user.name',
-            name:'user.name',
+            data:'name',
+            name:'name',
             title: 'نام کاربر',
 
         },
         {
-            data:'user.email',
-            name:'user.email',
+            data:'email',
+            name:'email',
             title: 'ایمیل کاربر',
         },
         {

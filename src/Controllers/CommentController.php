@@ -109,7 +109,7 @@ class CommentController extends Controller
                     $res = ['id' => $item->id, 'title' => $item->title];
                     $perc = ($avg / $i) * 20;
                     $all_perc += $perc;
-                    $res['avg'] = $perc;
+                    $res['avg'] = round($perc);
                     $result[] = $res;
                 }
             }
@@ -121,7 +121,7 @@ class CommentController extends Controller
         }
         if ($all_perc != 0)
         {
-            $data['all_avg'] = $all_perc / count($result);
+            $data['all_avg'] = round($all_perc / count($result));
         }
         else
         {
@@ -281,14 +281,56 @@ class CommentController extends Controller
             ->editColumn('id', function ($data) {
                 return LCS_getEncodeId($data->id);
             })
-            ->editColumn('user', function ($data) {
-                if (!isset($data->user))
+            ->editColumn('name', function ($data) {
+                if($data->name)
                 {
-                    return ['name' => null, 'email' => null];
+                    return $data->name ;
                 }
                 else
                 {
-                    return $data->user->toArray();
+                    $user =config('laravel_comments_system.user_model')::find($data->user_id) ;
+                    $user_name_column = config('laravel_comments_system.user_name_column') ;
+                    if($user)
+                    {
+                        if (isset($user->$user_name_column))
+                        {
+                            return $user->$user_name_column ;
+                        }
+                        else
+                        {
+                            return '' ;
+                        }
+                    }
+                    else
+                    {
+                        return '' ;
+                    }
+                }
+            })
+            ->editColumn('email', function ($data) {
+                if($data->email)
+                {
+                    return $data->email ;
+                }
+                else
+                {
+                    $user =config('laravel_comments_system.user_model')::find($data->user_id) ;
+                    $user_email_column = config('laravel_comments_system.user_email_column') ;
+                    if($user)
+                    {
+                        if (isset($user->$user_email_column))
+                        {
+                            return $user->$user_email_column ;
+                        }
+                        else
+                        {
+                            return '' ;
+                        }
+                    }
+                    else
+                    {
+                        return '' ;
+                    }
                 }
             })
             ->addColumn('morph_name', function ($data) {

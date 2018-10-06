@@ -14,12 +14,12 @@
                     <label><strong>{{t('avarage_present_item')}}</strong></label>
                     <div style="position: relative">
                         <label>{{t('for_base')}}<strong> {{this.count}} </strong> {{t('voted')}}</label>
-                        <progress-bar size="huge" :val="all_avg" max="100" bar-color="rgb(121, 218, 249)" text-position="middle"></progress-bar><span class="span_bar">{{this.all_avg}}%</span>
+                        <progress-bar size="huge" :val="all_avg" max="100" bar-color="rgb(121, 218, 249)" text-position="middle" :font-size="23" ></progress-bar>
                     </div>
                 </div>
                 <div class="lgs_col-sm-6 lgs_float_right show_left_result" style="border-right: 3px solid #eeeeee;">
                     <div v-for="res in results" :key="res.id" style="margin: 20px;position: relative">
-                        <progress-bar size="big" :val="res.avg" max="100" :text="res.title" bar-color="rgb(121, 218, 249)" text-position="top"></progress-bar><span class="show_span_item_result">{{res.avg}}%</span>
+                        <progress-bar size="big" :val="res.avg" max="100" :text="res.title" bar-color="rgb(121, 218, 249)" text-position="top"></progress-bar>
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@
     import Item from './components/item.vue';
     import commentForm from './components/commentForm.vue';
     import Vuex from "vuex";
-    import ProgressBar from 'vue-simple-progress'
+    import ProgressBar from './lib/vue-simple-progress/src/components/Progress.vue'
     window.axios = require('axios');
     import VueTranslate from 'vue-translate-plugin'
     Vue.use(VueTranslate);
