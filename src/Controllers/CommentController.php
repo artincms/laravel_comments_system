@@ -93,25 +93,34 @@ class CommentController extends Controller
             $result = [];
             $all_perc = 0;
             $count = 0;
+            $item_value_ids = [] ;
             foreach ($items as $item)
             {
-
                 $avg = 0;
-                $i = 0;
-                if (count($item->commentValues))
-                {
+
                     foreach ($item->commentValues as $value)
                     {
+                        if(!in_array($value->comment_id,$item_value_ids))
+                        {
+                            $item_value_ids[] = $value->comment_id ;
+                        }
+
                         $avg += $value->comment_item_value;
-                        $i++;
                         $count++;
                     }
                     $res = ['id' => $item->id, 'title' => $item->title];
-                    $perc = ($avg / $i) * 20;
+                    if(count($item->commentValues) > 0)
+                    {
+                        $perc = ($avg / count($item->commentValues)) * 20;
+                    }
+                    else
+                    {
+                        $perc = 0 ;
+                    }
                     $all_perc += $perc;
                     $res['avg'] = round($perc);
                     $result[] = $res;
-                }
+                    $item_ids[] = $item->id ;
             }
         }
         else
@@ -129,7 +138,7 @@ class CommentController extends Controller
         }
         $data['items'] = $items;
         $data['login_url'] = config('laravel_comments_system.login_url');
-        $data['count'] = $count;
+        $data['count'] = count($item_value_ids);
         $data['result'] = $result;
         if ($data['canComment'])
         {
