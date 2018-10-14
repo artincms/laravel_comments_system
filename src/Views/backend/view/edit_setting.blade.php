@@ -20,7 +20,7 @@
             <select class="form-control" name="morph_id">
                 <option value="0">انتخاب نمایید</option>
                 @foreach($morphs as $morph)
-                <option value="{{$morph->id}}" @if($morph->id == $settings->id ) selected @endif>{{$morph->text}}</option>
+                    <option value="{{$morph->id}}" @if($morph->id == $settings->id ) selected @endif>{{$morph->text}}</option>
                 @endforeach
             </select>
         </div>

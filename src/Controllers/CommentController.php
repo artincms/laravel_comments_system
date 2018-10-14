@@ -297,13 +297,12 @@ class CommentController extends Controller
                 }
                 else
                 {
-                    $user =config('laravel_comments_system.user_model')::find($data->user_id) ;
-                    $user_name_column = config('laravel_comments_system.user_name_column') ;
+                    $user =config('laravel_comments_system.user_data')($data->user_id) ;
                     if($user)
                     {
-                        if (isset($user->$user_name_column))
+                        if (isset($user['username']))
                         {
-                            return $user->$user_name_column ;
+                            return $user['username'] ;
                         }
                         else
                         {
@@ -323,13 +322,12 @@ class CommentController extends Controller
                 }
                 else
                 {
-                    $user =config('laravel_comments_system.user_model')::find($data->user_id) ;
-                    $user_email_column = config('laravel_comments_system.user_email_column') ;
+                    $user =config('laravel_comments_system.user_data')($data->user_id) ;
                     if($user)
                     {
-                        if (isset($user->$user_email_column))
+                        if (isset($user['email']))
                         {
-                            return $user->$user_email_column ;
+                            return $user['email'] ;
                         }
                         else
                         {
@@ -538,6 +536,16 @@ class CommentController extends Controller
         return DataTables::eloquent($item)
             ->editColumn('id', function ($data) {
                 return LCS_getEncodeId($data->id);
+            })
+            ->addColumn('morph', function ($data) {
+                if (isset($data->morph->name))
+                {
+                    return $data->morph->name;
+                }
+                else
+                {
+                    return '' ;
+                }
             })
             ->make(true);
 

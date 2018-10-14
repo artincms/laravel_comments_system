@@ -101,7 +101,7 @@ function LCS_GetUserInformation($user_id)
 {
     $user = \Illuminate\Foundation\Auth\User::find($user_id);
     return [
-        'name' => $user->name,
+        'name' => $user->username,
         'email' => $user->email,
     ] ;
 }

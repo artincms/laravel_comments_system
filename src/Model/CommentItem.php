@@ -18,5 +18,9 @@ class CommentItem extends Model
     {
         return $this->hasMany('ArtinCMS\LCS\Model\CommentItemValue','comment_item_id','id');
     }
+    public function morph()
+    {
+        return $this->belongsTo('ArtinCMS\LMM\Models\Morph', 'morphable_id');
+    }
 
 }

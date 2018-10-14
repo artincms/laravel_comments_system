@@ -23,6 +23,12 @@
             title: 'عنوان',
         },
         {
+            width: '20%',
+            data: 'morph',
+            name: 'morph',
+            title: 'گروه',
+        },
+        {
             width: '25%',
             data: 'created_by',
             name: 'created_by',
