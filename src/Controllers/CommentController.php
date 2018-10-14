@@ -72,7 +72,7 @@ class CommentController extends Controller
                 }
                 else
                 {
-                    $data['children'] = LCS_BuildTree($comments > where('approved', '=', 1)->toArray(), $pid_key, false, false, 0, 'encode_id','children',$jalali_date);
+                    $data['children'] = LCS_BuildTree($comments -> where('approved', '=', 1)->toArray(), $pid_key, false, false,  LCS_getEncodeId(0), 'encode_id','children',$jalali_date);
 
                 }
             }
