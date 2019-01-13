@@ -1,6 +1,6 @@
 <?php
 
-function LCS_BuildTree($flat_array, $pidKey, $openNodes = true, $selectedNode = false, $parent = 0, $idKey = 'id', $children_key = 'children',$jalali_date=true)
+function LCS_BuildTree($flat_array, $openNodes = true, $selectedNode = false, $parent = 0, $idKey = 'id', $children_key = 'children',$jalali_date=true)
 {
     $grouped = array();
     foreach ($flat_array as $sub)
@@ -16,7 +16,7 @@ function LCS_BuildTree($flat_array, $pidKey, $openNodes = true, $selectedNode = 
             $sub['state'] = ['selected' => true, 'opened' => true];
 
         }
-        $grouped[$sub[$pidKey]][] = $sub;
+        $grouped[$sub['encode_parent_id']][] = $sub;
 
     }
     $fnBuilder = function ($siblings) use (&$fnBuilder, $grouped, $idKey, $children_key) {
