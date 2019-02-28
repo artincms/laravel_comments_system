@@ -11,7 +11,7 @@ return [
     // ======================================================================
     //allow user to upload private file in filemanager
     'auto_publish'              => env('LCS_AUTO_PUBLISH', true),
-    'guest_can_comments'        => env('LCS_AUTO_PUBLISH', false),
+    'guest_can_comments'        => env('LCS_GUEST_CAN_COMMENTS', false),
     'login_url'                 => env('LCS_LOGIN_URL', 'http://127.0.0.1:8000/login'),
     'register_url'              => env('LCS_REGISTER_URL', 'http://127.0.0.1:8000/register'),
     'user_model'                => env('LCS_USER_MODEL', 'App\User'),
